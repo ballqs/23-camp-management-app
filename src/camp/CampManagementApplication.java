@@ -5,11 +5,13 @@ import camp.model.Student;
 import camp.model.Subject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 
 //정익 스코어 피쳐 생성
+
 /**
  * Notification
  * Java, 객체지향이 아직 익숙하지 않은 분들은 위한 소스코드 틀입니다.
@@ -115,7 +117,7 @@ public class CampManagementApplication {
         // 3.과목 담기
 
         // 4.studentStore 에 저장
-        Student student = new Student(sequence.sequence(INDEX_TYPE_STUDENT), studentName , new ArrayList<>()); // 수강생 인스턴스 생성 예시 코드
+        Student student = new Student(sequence.sequence(INDEX_TYPE_STUDENT), studentName, new ArrayList<>()); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
         System.out.println("수강생 등록 성공!\n");
     }
@@ -162,31 +164,83 @@ public class CampManagementApplication {
     // 수강생의 과목별 시험 회차 및 점수 등록
     public void createScore() {
         // 1.inquireStudent 함수 이용
+        inquireStudent(); // 수강생 전부 조회 -> 콘솔에 출력
+
         // 2.getStudentId 함수 이용
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
 
-        // 3.과목 리스트(해당 수강생이 등록한 과목 리스트)
+        // 3.과목 리스트(해당 수강생이 등록한 과목 리스트) 고유 번호
+        List<String> studentSubjects = findStudentSubjects(studentId); // 관리할 학생의 수강 과목
+
+        // 저장소를 다 뒤졌는데 없을 수도 있다.
+        if (studentSubjects == null) {
+            return; // try catch 생각
+        }
 
         // 4.회차(1 ~ 10) -> 해당 회차가 등록되어있는지 검증! 안되어 있는 것만 등록
+        registerScore(studentSubjects, studentId);
 
-        // 5.점수 등록
-        System.out.println("시험 점수를 등록합니다...");
+/*
+        Student student = findStudent(studentId);
+
+        if (student == null) {
+            System.out.println("등록된 학생이 아닙니다.");
+            return; // try catch 생각
+        }
+
+        List<String> subjectList = student.getSubjectList();
+*/
+
 
         // 6.등급 매기기
+
 
         // 7.등록
         System.out.println("\n점수 등록 성공!");
     }
 
+    private void registerScore(List<String> studentSubjects, String studentId) {
+        for (Score score : scoreStore) { // 점수 저장소
+            for (String studentSubject : studentSubjects) { // 과목 고유번호
+                if (checkScore(studentId, score, studentSubject)) {
+                    // 5.점수 등록
+                    System.out.println("시험 점수를 등록합니다...");
+                    System.out.print("시험 점수를 입력하세요: ");
+                    scoreStore.add(new Score(studentSubject, studentId, sc.nextInt()));
+                }
+            }
+        }
+    }
+
+    private static boolean checkScore(String studentId, Score score, String studentSubject) {
+        return score.getScoreStudentId().equals(studentId) && !(score.getScoreSubjectId().equals(studentSubject));
+    }
+
+    private List<String> findStudentSubjects(String studentId) {
+        for (Student student : studentStore) {
+            if (student.getStudentId().equals(studentId)) {
+                List<String> subjectList = student.getSubjectList();
+                System.out.println("학생이 등록한 과목은 " + subjectList);
+                return subjectList;
+            }
+        }
+        System.out.println("등록한 과목 리스트가 없습니다...");
+        return null;
+    }
+
     // 수강생의 과목별 회차 점수 수정
     public void updateRoundScoreBySubject() {
         // 1.inquireStudent 함수 이용
+        inquireStudent();
+
         // 2.getStudentId 함수 이용
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
 
         // 3.과목 리스트(해당 수강생이 등록한 과목 리스트)
+        // 학생 고유번호를 통해 학생을 특정 -> 반환
 
         // 4.회차(1 ~ 10)
+        // 학생 고유번호를 통해 얻어낸 학생의 회차를 확인
 
         // 5.점수 수정
         System.out.println("시험 점수를 수정합니다...");

@@ -23,4 +23,7 @@ public class Student {
         return studentName;
     }
 
+    public List<String> getSubjectList() {
+        return subjectList;
+    }
 }
