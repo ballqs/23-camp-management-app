@@ -25,16 +25,16 @@ public class CampManagementApplication {
     private static List<Score> scoreStore;
 
     // 과목 타입
-    private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";
-    private static String SUBJECT_TYPE_CHOICE = "CHOICE";
+    private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";     // 필수
+    private static String SUBJECT_TYPE_CHOICE = "CHOICE";           // 선택
 
     // index 관리 필드
     private static int studentIndex;
-    private static final String INDEX_TYPE_STUDENT = "ST";
+    private static final String INDEX_TYPE_STUDENT = "ST";          // ST + 숫자 => 수강생 고유번호
     private static int subjectIndex;
-    private static final String INDEX_TYPE_SUBJECT = "SU";
-    private static int scoreIndex;
-    private static final String INDEX_TYPE_SCORE = "SC";
+    private static final String INDEX_TYPE_SUBJECT = "SU";          // SU + 숫자 => 과목 고유번호
+//    private static int scoreIndex;                                // 사용안함
+//    private static final String INDEX_TYPE_SCORE = "SC";          // 사용안함
 
     // 스캐너
     private static Scanner sc = new Scanner(System.in);
@@ -49,7 +49,7 @@ public class CampManagementApplication {
         }
     }
 
-    // 초기 데이터 생성
+    // 과목 초기 데이터 생성
     private static void setInitData() {
         studentStore = new ArrayList<>();
         subjectStore = List.of(
@@ -114,8 +114,10 @@ public class CampManagementApplication {
                 return INDEX_TYPE_SUBJECT + subjectIndex;
             }
             default -> {
-                scoreIndex++;
-                return INDEX_TYPE_SCORE + scoreIndex;
+//                scoreIndex++;
+//                return INDEX_TYPE_SCORE + scoreIndex;
+                // try ~ catch 사용해보자....
+                return "";
             }
         }
     }
@@ -171,10 +173,14 @@ public class CampManagementApplication {
     private static void createStudent() {
         System.out.println("\n수강생을 등록합니다...");
         System.out.print("수강생 이름 입력: ");
-        String studentName = sc.next();
-        // 기능 구현 (필수 과목, 선택 과목)
+        String studentName = sc.next(); // 수강생 이름
+        // 1.수강생 이름 저장
 
-        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
+        // 2.과목리스트 조회(Subject 에서 가져와서 뿌리기) 필수:3 , 선택:2 검증 필요!!
+
+        // 3.studentStore 에 저장
+
+        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName , new ArrayList<String>()); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
         System.out.println("수강생 등록 성공!\n");
     }
@@ -182,7 +188,9 @@ public class CampManagementApplication {
     // 수강생 목록 조회
     private static void inquireStudent() {
         System.out.println("\n수강생 목록을 조회합니다...");
-        // 기능 구현
+
+        // 1.전체 조회 기반(studentStore 에서 가져오기) Student에서 조회해서 뿌리는 것 구현해서 이용해도 댐
+
         System.out.println("\n수강생 목록 조회 성공!");
     }
 
@@ -218,27 +226,54 @@ public class CampManagementApplication {
 
     // 수강생의 과목별 시험 회차 및 점수 등록
     private static void createScore() {
+        // 1.inquireStudent 함수 이용
+        // 2.getStudentId 함수 이용
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
+
+        // 3.과목 리스트(해당 수강생이 등록한 과목 리스트)
+
+        // 4.회차(1 ~ 10) -> 해당 회차가 등록되어있는지 검증! 안되어 있는 것만 등록
+
+        // 5.점수 등록
         System.out.println("시험 점수를 등록합니다...");
-        // 기능 구현
+
+        // 6.등급 매기기
+
+        // 7.등록
         System.out.println("\n점수 등록 성공!");
     }
 
     // 수강생의 과목별 회차 점수 수정
     private static void updateRoundScoreBySubject() {
+        // 1.inquireStudent 함수 이용
+        // 2.getStudentId 함수 이용
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        // 기능 구현 (수정할 과목 및 회차, 점수)
+
+        // 3.과목 리스트(해당 수강생이 등록한 과목 리스트)
+
+        // 4.회차(1 ~ 10)
+
+        // 5.점수 수정
         System.out.println("시험 점수를 수정합니다...");
-        // 기능 구현
+
+        // 6.등급 매기기
+
+        // 7.수정
         System.out.println("\n점수 수정 성공!");
     }
 
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
+        // 1.inquireStudent 함수 이용
+        // 2.getStudentId 함수 이용
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        // 기능 구현 (조회할 특정 과목)
+
+        // 3.과목 리스트(해당 수강생이 등록한 과목 리스트)
+
+        // 4.회차(1 ~ 10)
         System.out.println("회차별 등급을 조회합니다...");
-        // 기능 구현
+
+        // 5.결과 보여주기
         System.out.println("\n등급 조회 성공!");
     }
 
