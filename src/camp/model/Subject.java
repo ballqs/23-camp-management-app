@@ -1,10 +1,12 @@
 package camp.model;
 
+// 과목
 public class Subject {
-    private String subjectId;
-    private String subjectName;
-    private String subjectType;
+    private String subjectId;   // 과목 고유번호
+    private String subjectName; // 과목 이름
+    private String subjectType; // 과목 타입(
 
+    // 수정
     public Subject(String seq, String subjectName, String subjectType) {
         this.subjectId = seq;
         this.subjectName = subjectName;
