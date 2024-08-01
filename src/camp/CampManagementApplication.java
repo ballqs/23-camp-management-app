@@ -18,109 +18,41 @@ import java.util.Scanner;
  */
 public class CampManagementApplication {
     // 데이터 저장소
-    private static List<Student> studentStore;
-    private static List<Subject> subjectStore;
-    private static List<Score> scoreStore;
+    public List<Student> studentStore;
+    public List<Subject> subjectStore;
+    public List<Score> scoreStore;
+
+    public Sequence sequence = new Sequence();
 
     // 과목 타입
-    private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";     // 필수
-    private static String SUBJECT_TYPE_CHOICE = "CHOICE";           // 선택
+    public String SUBJECT_TYPE_MANDATORY = "MANDATORY";     // 필수
+    public String SUBJECT_TYPE_CHOICE = "CHOICE";           // 선택
 
     // index 관리 필드
-    private static int studentIndex;
-    private static final String INDEX_TYPE_STUDENT = "ST";          // ST + 숫자 => 수강생 고유번호
-    private static int subjectIndex;
-    private static final String INDEX_TYPE_SUBJECT = "SU";          // SU + 숫자 => 과목 고유번호
+    public static int studentIndex;
+    public final static String INDEX_TYPE_STUDENT = "ST";          // ST + 숫자 => 수강생 고유번호
+    public static int subjectIndex;
+    public final static String INDEX_TYPE_SUBJECT = "SU";          // SU + 숫자 => 과목 고유번호
 //    private static int scoreIndex;                                // 사용안함
 //    private static final String INDEX_TYPE_SCORE = "SC";          // 사용안함
 
     // 스캐너
-    private static Scanner sc = new Scanner(System.in);
+    public Scanner sc = new Scanner(System.in);
 
-    //
     public static void main(String[] args) {
-        setInitData();
+        CampManagementApplication campManagementApplication = new CampManagementApplication();
         try {
-            displayMainView();
+            campManagementApplication.displayMainView();
         } catch (Exception e) {
             System.out.println("\n오류 발생!\n프로그램을 종료합니다.");
         }
     }
 
-    // 과목 초기 데이터 생성
-    private static void setInitData() {
+    public void displayMainView() throws InterruptedException {
         studentStore = new ArrayList<>();
-        subjectStore = List.of(
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "Java",
-                        SUBJECT_TYPE_MANDATORY
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "객체지향",
-                        SUBJECT_TYPE_MANDATORY
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "Spring",
-                        SUBJECT_TYPE_MANDATORY
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "JPA",
-                        SUBJECT_TYPE_MANDATORY
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "MySQL",
-                        SUBJECT_TYPE_MANDATORY
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "디자인 패턴",
-                        SUBJECT_TYPE_CHOICE
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "Spring Security",
-                        SUBJECT_TYPE_CHOICE
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "Redis",
-                        SUBJECT_TYPE_CHOICE
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "MongoDB",
-                        SUBJECT_TYPE_CHOICE
-                )
-        );
         scoreStore = new ArrayList<>();
-    }
+        subjectStore = new Init().setInitData();
 
-    // index 자동 증가
-    private static String sequence(String type) {
-        switch (type) {
-            case INDEX_TYPE_STUDENT -> {
-                studentIndex++;
-                return INDEX_TYPE_STUDENT + studentIndex;
-            }
-            case INDEX_TYPE_SUBJECT -> {
-                subjectIndex++;
-                return INDEX_TYPE_SUBJECT + subjectIndex;
-            }
-            default -> {
-//                scoreIndex++;
-//                return INDEX_TYPE_SCORE + scoreIndex;
-                // try ~ catch 사용해보자....
-                return "";
-            }
-        }
-    }
-
-    private static void displayMainView() throws InterruptedException {
         boolean flag = true;
         while (flag) {
             System.out.println("\n==================================");
@@ -144,7 +76,7 @@ public class CampManagementApplication {
         System.out.println("프로그램을 종료합니다.");
     }
 
-    private static void displayStudentView() {
+    public void displayStudentView() {
         boolean flag = true;
         while (flag) {
             System.out.println("==================================");
@@ -168,23 +100,26 @@ public class CampManagementApplication {
     }
 
     // 수강생 등록
-    private static void createStudent() {
+    public void createStudent() {
         System.out.println("\n수강생을 등록합니다...");
+
+        // 1.수강생 이름 저장
         System.out.print("수강생 이름 입력: ");
         String studentName = sc.next(); // 수강생 이름
-        // 1.수강생 이름 저장
 
         // 2.과목리스트 조회(Subject 에서 가져와서 뿌리기) 필수:3 , 선택:2 검증 필요!!
 
-        // 3.studentStore 에 저장
 
-        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName , new ArrayList<String>()); // 수강생 인스턴스 생성 예시 코드
+        // 3.과목 담기
+
+        // 4.studentStore 에 저장
+        Student student = new Student(sequence.sequence(INDEX_TYPE_STUDENT), studentName , new ArrayList<>()); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
         System.out.println("수강생 등록 성공!\n");
     }
 
     // 수강생 목록 조회
-    private static void inquireStudent() {
+    public void inquireStudent() {
         System.out.println("\n수강생 목록을 조회합니다...");
 
         // 1.전체 조회 기반(studentStore 에서 가져오기) Student에서 조회해서 뿌리는 것 구현해서 이용해도 댐
@@ -192,7 +127,7 @@ public class CampManagementApplication {
         System.out.println("\n수강생 목록 조회 성공!");
     }
 
-    private static void displayScoreView() {
+    public void displayScoreView() {
         boolean flag = true;
         while (flag) {
             System.out.println("==================================");
@@ -217,13 +152,13 @@ public class CampManagementApplication {
         }
     }
 
-    private static String getStudentId() {
+    public String getStudentId() {
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
         return sc.next();
     }
 
     // 수강생의 과목별 시험 회차 및 점수 등록
-    private static void createScore() {
+    public void createScore() {
         // 1.inquireStudent 함수 이용
         // 2.getStudentId 함수 이용
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
@@ -242,7 +177,7 @@ public class CampManagementApplication {
     }
 
     // 수강생의 과목별 회차 점수 수정
-    private static void updateRoundScoreBySubject() {
+    public void updateRoundScoreBySubject() {
         // 1.inquireStudent 함수 이용
         // 2.getStudentId 함수 이용
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
@@ -261,7 +196,7 @@ public class CampManagementApplication {
     }
 
     // 수강생의 특정 과목 회차별 등급 조회
-    private static void inquireRoundGradeBySubject() {
+    public void inquireRoundGradeBySubject() {
         // 1.inquireStudent 함수 이용
         // 2.getStudentId 함수 이용
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
