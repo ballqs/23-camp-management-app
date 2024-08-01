@@ -6,9 +6,9 @@ import java.util.*;
 public class Student {
     private String studentId;   // 수강생 고유번호
     private String studentName; // 수강생 이름
-    private List<String> subjectList;   // 과목리스트<과목 고유번호>
+    private List<Subject> subjectList;   // 과목리스트<과목 고유번호>
 
-    public Student(String seq, String studentName, ArrayList<String> subjectList) {
+    public Student(String seq, String studentName, ArrayList<Subject> subjectList) {
         this.studentId = seq;
         this.studentName = studentName;
         this.subjectList = subjectList;
