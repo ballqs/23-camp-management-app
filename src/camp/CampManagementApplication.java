@@ -6,6 +6,7 @@ import camp.model.Subject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -110,12 +111,54 @@ public class CampManagementApplication {
         String studentName = sc.next(); // 수강생 이름
 
         // 2.과목리스트 조회(Subject 에서 가져와서 뿌리기) 필수:3 , 선택:2 검증 필요!!
-
+        SubjectManagement subjectManagement = new SubjectManagement();
+        subjectManagement.selectAll(subjectStore);
 
         // 3.과목 담기
+        int required = 0;
+        int choice = 0;
+        List<Subject> subjectList = new ArrayList<>();
+        while (true) {
+            System.out.print("과목 고유번호 입력: ");
+            String subjectId = sc.next(); // 과목 고유번호
+
+            // null이 리턴될 경우 어떻게 처리할지
+            Subject subject = subjectManagement.select(subjectStore , subjectId);
+
+            // null 검증
+            if (Objects.isNull(subject)) {
+                System.out.println("과목 고유번호를 제대로 입력해주세요.");
+                continue;
+            }
+
+            // 중복으로 등록된건지 검증
+            if (subjectList.stream().anyMatch(it -> it.getSubjectId().equals(subject.getSubjectId()))) {
+                System.out.println("이미 등록된 과목이 있습니다.");
+                continue;
+            }
+            subjectList.add(subject);
+
+            if (subject.getSubjectType().equals("MANDATORY")) {
+                required++;
+            } else {
+                choice++;
+            }
+
+            if (required < 3 || choice < 2) {
+                System.out.println("등록된 과목은 현재 필수 : " + required + " , 선택 : " + choice);
+                System.out.println("과목을 더 등록해주세요.");
+            } else {
+                System.out.println("과목을 더 등록하시겠습니까?");
+                String result = sc.next(); // 과목 고유번호
+                if (!result.equals("예")) {
+                    System.out.println("과목 등록을 마쳤습니다.");
+                    break;
+                }
+            }
+        }
 
         // 4.studentStore 에 저장
-        Student student = new Student(sequence.sequence(INDEX_TYPE_STUDENT), studentName , new ArrayList<>()); // 수강생 인스턴스 생성 예시 코드
+        Student student = new Student(sequence.sequence(INDEX_TYPE_STUDENT), studentName , (ArrayList) subjectList); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
         System.out.println("수강생 등록 성공!\n");
     }
