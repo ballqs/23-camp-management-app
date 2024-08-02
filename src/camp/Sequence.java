@@ -1,6 +1,7 @@
 package camp;
 
-import camp.cont.IndexType;
+import camp.data.Data;
+import camp.enums.IndexType;
 
 public class Sequence {
 
@@ -8,12 +9,12 @@ public class Sequence {
     public String sequence(String type) {
         switch (type) {
             case "ST" -> {
-                CampManagementApplication.studentIndex++;
-                return IndexType.ST.name() + CampManagementApplication.studentIndex;
+                Data.studentIndex++;
+                return IndexType.ST.name() + Data.studentIndex;
             }
             case "SU" -> {
-                CampManagementApplication.subjectIndex++;
-                return IndexType.SU.name() + CampManagementApplication.subjectIndex;
+                Data.subjectIndex++;
+                return IndexType.SU.name() + Data.subjectIndex;
             }
             default -> {
 //                scoreIndex++;

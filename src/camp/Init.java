@@ -1,10 +1,9 @@
 package camp;
 
-import camp.cont.IndexType;
-import camp.cont.SubjectType;
+import camp.enums.IndexType;
+import camp.enums.SubjectType;
 import camp.model.Subject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Init {
