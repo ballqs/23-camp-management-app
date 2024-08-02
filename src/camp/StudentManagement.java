@@ -9,6 +9,11 @@ import java.util.List;
 public class StudentManagement implements ManagementInterface<Student>{
     @Override
     public Student select(List<Student> list, String id) {
+        for(Student student : list) {
+            if(student.getStudentId().equals(id)) {
+                return student;
+            }
+        }
         return null;
     }
 
@@ -23,6 +28,7 @@ public class StudentManagement implements ManagementInterface<Student>{
             System.out.println("수강생 고유번호 : " + str.getStudentId());
             System.out.println("수강생 이름 : " + str.getStudentName());
             System.out.println("수강생 과목 : " + String.join(",", sub));
+            System.out.println("수강생 상태 : " + str.getStudentStatus());
             System.out.println("==================================");
         }
     }

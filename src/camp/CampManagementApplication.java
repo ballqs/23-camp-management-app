@@ -5,6 +5,7 @@ import camp.enums.SubjectType;
 import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
+import jdk.jshell.Snippet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,7 +171,14 @@ public class CampManagementApplication {
     }
 
     // 수강생 상태 관리
-    public void changeStudentStatus() {
+    public void  changeStudentStatus() {
+        inquireStudent();
+        while (true){
+            String studentId = getStudentId(); //수강생 고유번호
+            StudentManagement studentManagement = new StudentManagement();
+            // null이 리턴될 경우 어떻게 처리할지
+            Student student = studentManagement.select(studentStore , studentId);
+        }
 
     }
 
