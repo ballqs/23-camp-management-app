@@ -1,4 +1,4 @@
-package camp.cont;
+package camp.enums;
 
 public enum IndexType {
     // ST + 숫자 => 수강생 고유번호

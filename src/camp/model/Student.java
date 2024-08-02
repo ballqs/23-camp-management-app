@@ -6,12 +6,38 @@ import java.util.*;
 public class Student {
     private String studentId;   // 수강생 고유번호
     private String studentName; // 수강생 이름
-    private List<String> subjectList;   // 과목리스트<과목 고유번호>
+    private List<Subject> subjectList;   // 과목리스트<과목 고유번호>
+    private String studentStatus;
 
-    public Student(String seq, String studentName, ArrayList<String> subjectList) {
+    public String getStudentStatus() {
+        return studentStatus;
+    }
+
+    public void setStudentStatus(String studentStatus) {
+        this.studentStatus = studentStatus;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public List<Subject> getSubjectList() {
+        return subjectList;
+    }
+
+    public void setSubjectList(List<Subject> subjectList) {
+        this.subjectList = subjectList;
+    }
+
+    public Student(String seq, String studentName, ArrayList<Subject> subjectList, String studentStatus) {
         this.studentId = seq;
         this.studentName = studentName;
         this.subjectList = subjectList;
+        this.studentStatus = studentStatus;
     }
 
     // Getter
@@ -23,7 +49,4 @@ public class Student {
         return studentName;
     }
 
-    public List<String> getSubjectList() {
-        return subjectList;
-    }
 }

@@ -1,15 +1,16 @@
 package camp;
 
-import camp.cont.IndexType;
-import camp.cont.SubjectType;
-import camp.model.score.*;
+import camp.enums.IndexType;
+import camp.enums.SubjectType;
+import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
 
-import java.util.*;
-
-import static camp.cont.SubjectType.*;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Scanner;
+//수정
 /**
  * Notification
  * Java, 객체지향이 아직 익숙하지 않은 분들은 위한 소스코드 틀입니다.
@@ -27,11 +28,6 @@ public class CampManagementApplication {
     public List<Score> scoreStore;
 
     public Sequence sequence = new Sequence();
-
-
-    // index 관리 필드
-    public static int studentIndex;
-    public static int subjectIndex;
 
 //    private static int scoreIndex;                                // 사용안함
 //    private static final String INDEX_TYPE_SCORE = "SC";          // 사용안함
@@ -83,14 +79,16 @@ public class CampManagementApplication {
             System.out.println("수강생 관리 실행 중...");
             System.out.println("1. 수강생 등록");
             System.out.println("2. 수강생 목록 조회");
-            System.out.println("3. 메인 화면 이동");
+            System.out.println("3. 수강생 상태 변경");
+            System.out.println("4. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
 
             switch (input) {
                 case 1 -> createStudent(); // 수강생 등록
                 case 2 -> inquireStudent(); // 수강생 목록 조회
-                case 3 -> flag = false; // 메인 화면 이동
+                case 3 -> changeStudentStatus();
+                case 4 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
@@ -112,15 +110,15 @@ public class CampManagementApplication {
         subjectManagement.selectAll(subjectStore);
 
         // 3.과목 담기
-        int required = 0;
-        int choice = 0;
+        int required = 0;   // 필수
+        int choice = 0;     // 선택
         List<Subject> subjectList = new ArrayList<>();
         while (true) {
             System.out.print("과목 고유번호 입력: ");
             String subjectId = sc.next(); // 과목 고유번호
 
             // null이 리턴될 경우 어떻게 처리할지
-            Subject subject = subjectManagement.select(subjectStore, subjectId);
+            Subject subject = subjectManagement.select(subjectStore , subjectId);
 
             // null 검증
             if (Objects.isNull(subject)) {
@@ -128,17 +126,18 @@ public class CampManagementApplication {
                 continue;
             }
 
-            // 중복으로 등록된건지 검증
+            // 중복으로 등록된건지 검증 (anyMatch : 일치하는게 있는지 검증[return boolean])
+            // subject 이게 명칭 중복 등 문제가 있으면 다른 명칭으로 대체
             if (subjectList.stream().anyMatch(it -> it.getSubjectId().equals(subject.getSubjectId()))) {
                 System.out.println("이미 등록된 과목이 있습니다.");
                 continue;
             }
             subjectList.add(subject);
 
-            if (subject.getSubjectType().equals("MANDATORY")) {
-                required++;
+            if (subject.getSubjectType().equals(SubjectType.MANDATORY.name())) {
+                required++;     // 필수 증가
             } else {
-                choice++;
+                choice++;       // 선택 증가
             }
 
             if (required < 3 || choice < 2) {
@@ -155,7 +154,8 @@ public class CampManagementApplication {
         }
 
         // 4.studentStore 에 저장
-        Student student = new Student(sequence.sequence(IndexType.ST.name()), studentName, (ArrayList) subjectList); // 수강생 인스턴스 생성 예시 코드
+        Student student = new Student(sequence.sequence(IndexType.ST.name()), studentName , (ArrayList) subjectList,"Green"); // 수강생 인스턴스 생성 예시 코드
+        studentStore.add(student);
         // 기능 구현
         System.out.println("수강생 등록 성공!\n");
     }
@@ -163,10 +163,15 @@ public class CampManagementApplication {
     // 수강생 목록 조회
     public void inquireStudent() {
         System.out.println("\n수강생 목록을 조회합니다...");
-
         // 1.전체 조회 기반(studentStore 에서 가져오기) Student에서 조회해서 뿌리는 것 구현해서 이용해도 댐
-
+        StudentManagement studentManagement = new StudentManagement();
+        studentManagement.selectAll(studentStore);
         System.out.println("\n수강생 목록 조회 성공!");
+    }
+
+    // 수강생 상태 관리
+    public void changeStudentStatus() {
+
     }
 
     public void displayScoreView() {
@@ -419,4 +424,5 @@ public class CampManagementApplication {
         // 5.결과 보여주기
         System.out.println("\n등급 조회 성공!");
     }
+
 }
