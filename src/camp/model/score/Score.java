@@ -1,14 +1,17 @@
 package camp.model.score;
 
+import camp.model.score.gradeconvertor.Grade;
+import camp.model.score.gradeconvertor.GradeConvertor;
+
 import java.util.Map;
 
 public class Score {
 
     private final GradeConvertor gradeConvertor;
-    private String subjectId;  // 과목 고유번호
-    private String studentId;  // 수강생 고유번호
-    private final Map<Integer, Integer> scoreMap;
-    private final Map<Integer, Grade> gradeMap;
+    private String subjectId;  // 어떤 과목의 점수
+    private String studentId;  // 어떤 학생의 점수
+    private final Map<Integer, Integer> scoreMap; // 회차에 따른 점수
+    private final Map<Integer, Grade> gradeMap; // 회차에 따른 등급
 
     public Score(GradeConvertor gradeConvertor,
                  String subjectId,
@@ -21,10 +24,6 @@ public class Score {
         this.studentId = studentId;
         this.scoreMap = scoreMap;
         this.gradeMap = gradeMap;
-    }
-
-    public GradeConvertor getGradeConvertor() {
-        return gradeConvertor;
     }
 
     public String getSubjectId() {

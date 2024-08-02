@@ -8,9 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentManagement implements ManagementInterface<Student>{
-    @Override
+
     public Student getData(String value) {
         return Data.studentStore.get(value);
+    }
+
+    @Override
+    public Student select(List<Student> list, String id) {
+        return null;
     }
 
     @Override
@@ -30,7 +35,7 @@ public class StudentManagement implements ManagementInterface<Student>{
     }
 
     @Override
-    public void update(String id , String fleid , String value) {
+    public Student update(String id , String fleid , String value) {
         Student student = Data.studentStore.get(id);
         switch (fleid) {
             case "studentName" :
@@ -41,15 +46,16 @@ public class StudentManagement implements ManagementInterface<Student>{
                 break;
         }
         Data.studentStore.put(id , student);
+        return null;
     }
 
     @Override
-    public void delete() {
-
+    public Student delete() {
+        return null;
     }
 
     @Override
-    public void insert() {
-
+    public Student insert() {
+        return null;
     }
 }

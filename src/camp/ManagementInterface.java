@@ -11,7 +11,7 @@ public interface ManagementInterface<T> {
     void selectAll();
 
     // 수정
-    T update();
+    T update(String id , String fleid , String value);
 
     // 삭제
     T delete();

@@ -5,7 +5,6 @@ import camp.enums.SubjectType;
 import camp.model.Subject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Init {

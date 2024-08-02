@@ -1,4 +1,4 @@
-package camp.model.score;
+package camp.model.score.gradeconvertor;
 
 import java.util.Map;
 

@@ -6,9 +6,15 @@ import camp.model.Subject;
 import java.util.List;
 
 public class SubjectManagement implements ManagementInterface<Subject>{
-    @Override
+
+
     public Subject getData(String value) {
         return Data.subjectStore.get(value);
+    }
+
+    @Override
+    public Subject select(List<Subject> list, String id) {
+        return null;
     }
 
     @Override
@@ -23,17 +29,17 @@ public class SubjectManagement implements ManagementInterface<Subject>{
     }
 
     @Override
-    public void update(String id , String fleid , String value) {
-
+    public Subject update(String id , String fleid , String value) {
+        return null;
     }
 
     @Override
-    public void delete() {
-
+    public Subject delete() {
+        return null;
     }
 
     @Override
-    public void insert() {
-
+    public Subject insert() {
+        return null;
     }
 }

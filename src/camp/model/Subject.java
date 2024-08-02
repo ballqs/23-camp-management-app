@@ -1,9 +1,5 @@
 package camp.model;
 
-import camp.cont.SubjectType;
-
-import java.util.List;
-
 // 과목
 public class Subject {
     private String subjectId;   // 과목 고유번호
@@ -45,4 +41,12 @@ public class Subject {
         return subjectType;
     }
 
+    @Override
+    public String toString() {
+        return "Subject{" +
+                "subjectId='" + subjectId + '\'' +
+                ", subjectName='" + subjectName + '\'' +
+                ", subjectType='" + subjectType + '\'' +
+                '}';
+    }
 }

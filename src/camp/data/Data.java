@@ -1,10 +1,9 @@
 package camp.data;
 
-import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
+import camp.model.score.Score;
 
-import java.util.List;
 import java.util.Map;
 
 public class Data {    // index 관리 필드
@@ -14,5 +13,5 @@ public class Data {    // index 관리 필드
     // 데이터 저장소
     public static Map<String , Student> studentStore;
     public static Map<String , Subject> subjectStore;
-    public static List<Score> scoreStore;
+    public static Map<String, Score> scoreStore;
 }
