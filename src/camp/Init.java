@@ -1,63 +1,62 @@
 package camp;
 
+import camp.cont.IndexType;
+import camp.cont.SubjectType;
 import camp.model.Subject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Init {
-    // 과목 타입
-    public String SUBJECT_TYPE_MANDATORY = "MANDATORY";     // 필수
-    public String SUBJECT_TYPE_CHOICE = "CHOICE";           // 선택
 
     // 과목 초기 데이터 생성
     public List<Subject> setInitData() {
         Sequence sequence = new Sequence();
         List<Subject> subjectStore = List.of(
                 new Subject(
-                        sequence.sequence(CampManagementApplication.INDEX_TYPE_SUBJECT),
+                        sequence.sequence(IndexType.SU.name()),
                         "Java",
-                        SUBJECT_TYPE_MANDATORY
+                        SubjectType.MANDATORY.name()
                 ),
                 new Subject(
-                        sequence.sequence(CampManagementApplication.INDEX_TYPE_SUBJECT),
+                        sequence.sequence(IndexType.SU.name()),
                         "객체지향",
-                        SUBJECT_TYPE_MANDATORY
+                        SubjectType.MANDATORY.name()
                 ),
                 new Subject(
-                        sequence.sequence(CampManagementApplication.INDEX_TYPE_SUBJECT),
+                        sequence.sequence(IndexType.SU.name()),
                         "Spring",
-                        SUBJECT_TYPE_MANDATORY
+                        SubjectType.MANDATORY.name()
                 ),
                 new Subject(
-                        sequence.sequence(CampManagementApplication.INDEX_TYPE_SUBJECT),
+                        sequence.sequence(IndexType.SU.name()),
                         "JPA",
-                        SUBJECT_TYPE_MANDATORY
+                        SubjectType.MANDATORY.name()
                 ),
                 new Subject(
-                        sequence.sequence(CampManagementApplication.INDEX_TYPE_SUBJECT),
+                        sequence.sequence(IndexType.SU.name()),
                         "MySQL",
-                        SUBJECT_TYPE_MANDATORY
+                        SubjectType.MANDATORY.name()
                 ),
                 new Subject(
-                        sequence.sequence(CampManagementApplication.INDEX_TYPE_SUBJECT),
+                        sequence.sequence(IndexType.SU.name()),
                         "디자인 패턴",
-                        SUBJECT_TYPE_CHOICE
+                        SubjectType.CHOICE.name()
                 ),
                 new Subject(
-                        sequence.sequence(CampManagementApplication.INDEX_TYPE_SUBJECT),
+                        sequence.sequence(IndexType.SU.name()),
                         "Spring Security",
-                        SUBJECT_TYPE_CHOICE
+                        SubjectType.CHOICE.name()
                 ),
                 new Subject(
-                        sequence.sequence(CampManagementApplication.INDEX_TYPE_SUBJECT),
+                        sequence.sequence(IndexType.SU.name()),
                         "Redis",
-                        SUBJECT_TYPE_CHOICE
+                        SubjectType.CHOICE.name()
                 ),
                 new Subject(
-                        sequence.sequence(CampManagementApplication.INDEX_TYPE_SUBJECT),
+                        sequence.sequence(IndexType.SU.name()),
                         "MongoDB",
-                        SUBJECT_TYPE_CHOICE
+                        SubjectType.CHOICE.name()
                 )
         );
         return subjectStore;
