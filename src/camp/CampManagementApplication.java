@@ -5,13 +5,14 @@ import camp.enums.IndexType;
 import camp.enums.SubjectType;
 import camp.model.Student;
 import camp.model.Subject;
+import camp.model.score.Score;
 import camp.model.score.controller.ScoreController;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+
 
 /**
  * Notification
@@ -245,20 +246,58 @@ public class CampManagementApplication {
 
     private void register(Map<String, Subject> subjectMap, String studentId) {
         ScoreController scoreController = new ScoreController();
+        Score score;
 
         for (String key : subjectMap.keySet()) {
             Subject subject = subjectMap.get(key);
-            System.out.print("등록할 " + subject.getSubjectName() + "의 점수를 입력하세요: ");
-            int inputScore = sc.nextInt();
-
-            while (0 > inputScore || inputScore > 100) {
-                System.out.println("잘못된 점수를 입력하였습니다.\n0~100 사이의 점수를 다시 입력해주세요: ");
-                inputScore = sc.nextInt();
-            }
 
             // 컨트롤러 호출
-            scoreController.registerScore(studentId, inputScore, subject);
+            try {
+                score = scoreController.findScoreInStore(studentId, subject);
+                if (score == null) {
+                    score = scoreController.createScore(studentId, subject);
+                }
 
+
+                if (score.getScoreMap().size() >= 10) {
+                    throw new IllegalStateException("최대 10회차까지만 등록이 가능합니다.");
+                }
+
+
+                int option;
+                do {
+                    int times = score.getScoreMap().size();
+
+                    System.out.print(
+                            subject.getSubjectName() + "과목의 " +
+                                    (times + 1) + "회차에 점수를 등록하시겠습니까? "
+                    );
+                    System.out.println("(1. 예 | 2. 아니오)");
+                    option = sc.nextInt();
+
+                    switch (option) {
+                        case 1:
+                            System.out.print("등록할 점수를 입력해주세요: ");
+                            break;
+
+                        case 2:
+                            throw new IllegalStateException(subject.getSubjectName() + "의 점수를 등록하지 않습니다.");
+
+                        default:
+                            System.out.println("옵션을 잘못 입력하셨습니다.\n");
+                    }
+                } while (option != 1);
+
+                int subjectScore = sc.nextInt();
+                while (0 > subjectScore || subjectScore > 100) {
+                    System.out.println("잘못된 점수를 입력하였습니다.\n0~100 사이의 점수를 다시 입력해주세요: ");
+                    subjectScore = sc.nextInt();
+                }
+
+                scoreController.registerScore(subjectScore, score);
+            } catch (RuntimeException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
