@@ -153,6 +153,7 @@ public class CampManagementApplication {
 
         // 4.studentStore 에 저장
         Student student = new Student(sequence.sequence(IndexType.ST.name()), studentName , (ArrayList) subjectList); // 수강생 인스턴스 생성 예시 코드
+        studentStore.add(student);
         // 기능 구현
         System.out.println("수강생 등록 성공!\n");
     }
@@ -160,9 +161,9 @@ public class CampManagementApplication {
     // 수강생 목록 조회
     public void inquireStudent() {
         System.out.println("\n수강생 목록을 조회합니다...");
-
         // 1.전체 조회 기반(studentStore 에서 가져오기) Student에서 조회해서 뿌리는 것 구현해서 이용해도 댐
-
+        StudentManagement studentManagement = new StudentManagement();
+        studentManagement.selectAll(studentStore);
         System.out.println("\n수강생 목록 조회 성공!");
     }
 
