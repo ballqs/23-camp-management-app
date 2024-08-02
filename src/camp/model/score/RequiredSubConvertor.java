@@ -1,11 +1,14 @@
 package camp.model.score;
 
+import java.util.Map;
+
 import static camp.model.score.Grade.*;
 
 public class RequiredSubConvertor implements GradeConvertor {
 
     @Override
-    public Grade ScoreToGrade(int score) {
+    public Grade ScoreToGrade(Map<Integer, Integer> scoreMap) {
+        Integer score = scoreMap.get(scoreMap.size());
 
         if (95 <= score && score <= 100) {
             return A;

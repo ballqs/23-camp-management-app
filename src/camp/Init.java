@@ -7,6 +7,8 @@ import camp.model.Subject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static camp.cont.SubjectType.*;
+
 public class Init {
 
     // 과목 초기 데이터 생성
@@ -16,47 +18,47 @@ public class Init {
                 new Subject(
                         sequence.sequence(IndexType.SU.name()),
                         "Java",
-                        SubjectType.MANDATORY.name()
+                        MANDATORY.name()
                 ),
                 new Subject(
                         sequence.sequence(IndexType.SU.name()),
                         "객체지향",
-                        SubjectType.MANDATORY.name()
+                        MANDATORY.name()
                 ),
                 new Subject(
                         sequence.sequence(IndexType.SU.name()),
                         "Spring",
-                        SubjectType.MANDATORY.name()
+                        MANDATORY.name()
                 ),
                 new Subject(
                         sequence.sequence(IndexType.SU.name()),
                         "JPA",
-                        SubjectType.MANDATORY.name()
+                        MANDATORY.name()
                 ),
                 new Subject(
                         sequence.sequence(IndexType.SU.name()),
                         "MySQL",
-                        SubjectType.MANDATORY.name()
+                        MANDATORY.name()
                 ),
                 new Subject(
                         sequence.sequence(IndexType.SU.name()),
                         "디자인 패턴",
-                        SubjectType.CHOICE.name()
+                        CHOICE.name()
                 ),
                 new Subject(
                         sequence.sequence(IndexType.SU.name()),
                         "Spring Security",
-                        SubjectType.CHOICE.name()
+                        CHOICE.name()
                 ),
                 new Subject(
                         sequence.sequence(IndexType.SU.name()),
                         "Redis",
-                        SubjectType.CHOICE.name()
+                        CHOICE.name()
                 ),
                 new Subject(
                         sequence.sequence(IndexType.SU.name()),
                         "MongoDB",
-                        SubjectType.CHOICE.name()
+                        CHOICE.name()
                 )
         );
         return subjectStore;

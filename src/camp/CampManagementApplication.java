@@ -1,15 +1,14 @@
 package camp;
 
 import camp.cont.IndexType;
-import camp.model.Score;
+import camp.cont.SubjectType;
 import camp.model.score.*;
 import camp.model.Student;
 import camp.model.Subject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
+
+import static camp.cont.SubjectType.*;
 
 /**
  * Notification
@@ -121,7 +120,7 @@ public class CampManagementApplication {
             String subjectId = sc.next(); // 과목 고유번호
 
             // null이 리턴될 경우 어떻게 처리할지
-            Subject subject = subjectManagement.select(subjectStore , subjectId);
+            Subject subject = subjectManagement.select(subjectStore, subjectId);
 
             // null 검증
             if (Objects.isNull(subject)) {
@@ -156,7 +155,7 @@ public class CampManagementApplication {
         }
 
         // 4.studentStore 에 저장
-        Student student = new Student(sequence.sequence(IndexType.ST.name()), studentName , (ArrayList) subjectList); // 수강생 인스턴스 생성 예시 코드
+        Student student = new Student(sequence.sequence(IndexType.ST.name()), studentName, (ArrayList) subjectList); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
         System.out.println("수강생 등록 성공!\n");
     }
@@ -230,13 +229,17 @@ public class CampManagementApplication {
      * 조건 1. 우리가 특정한 학생이어야한다.
      * 조건 2. 특정한 학생이 수강하는 과목이 점수 저장소에 등록되어있지 않아야 한다.
      * <p>
+     * 이미 등록되어있는 경우
+     * 조건 1. 우리가 특정한 학생이어야한다.
+     * 조건 2. 특정한 학생이 수강하는 과목이 점수 저장소에 등록되어있다. -> 최소 1회차 점수 등록되어있어야함.
+     * <p>
      * 5-2. 위 조건문을 통과했다면 이제 Score 인스턴스를 생성해서 등록할 준비를 하자.
      * <p>
      * a. findGradeConvertor(studentSubject);를 이용해서 필수 || 선택중 컨버터를 선택한다.
      * -> 컨버터는 Score를 생성할 때, 같이 넘겨준다.
      * -> gradeConvertor가 null일 수도 있으니, 조건문으로 확인해준다.
      * -> new Score(gradeConvertor, studentSubject, studentId, sc.nextInt());로 객체를 생성.
-     * -> Score는 생성자로 점수를 등급으로 변환할 컨버터, 저장할 과목의 고유번호, 저장할 학생의 고유번호, 점수를 받는다.
+     * -> Score는 생성자로 (점수를 등급으로 변환할 컨버터, 저장할 과목의 고유번호, 저장할 학생의 고유번호, 점수)를 받는다.
      * -> 등록할 점수는 scanner로 받는다.
      * <p>
      * b. calculateGrade();를 이용해서 점수 -> 등급으로 변환하고 score에 저장한다.
@@ -245,7 +248,6 @@ public class CampManagementApplication {
      * score 내부에서 작업하고 자신의 필드에 직접 넣는 게 맞다고 생각했다.
      * -> calculateGrade()는 GradeConvertor()를 호출한다.
      * -> 다형성을 이용해서 선택과목의 경우 선택과목 컨버터를 구현해서 생성자로 넣어주면 된다.
-     * -> 우선은 모두가 필수과목이라고 가정했다. -> 선택과목은 기능추가 선택사항이기 때문에...
      * <p>
      * c. 점수 -> 등급 변환을 마치면, score 객체에는 학생 고유번호, 과목 고유번호, 점수, 등급이 채워져있다.
      * -> 그럼 회차는?
@@ -264,7 +266,7 @@ public class CampManagementApplication {
         List<String> studentSubjects = findStudentSubjects(studentId); // 관리할 학생의 수강 과목 고유번호
 
         // 4.
-        if (studentSubjects == null) {
+        if (Objects.isNull(studentSubjects)) {
             System.out.println("학생이 수강하는 과목이 없습니다...");
             return; // try catch 생각
         }
@@ -281,44 +283,80 @@ public class CampManagementApplication {
 
     // 5-1.
     private void registerScore(List<String> studentSubjects, String studentId) { // 더 좋게 코드를 변경할 수 있을 거 같은데...
+        GradeConvertor gradeConvertor;
+        Score scoreObj;
+
         for (Score score : scoreStore) { // 점수 저장소
             for (String studentSubject : studentSubjects) { // 과목 고유번호
-                if (isNotInScoreRepository(studentId, score, studentSubject)) {
-                    System.out.print(studentSubject + "의 점수를 저장합니다.\n점수를 입력해주세요: ");
-                    // 5-2.
 
-                    GradeConvertor gradeConvertor = findGradeConvertor(studentSubject);
+                // 5-2.
+                if (isNotInScoreRepository(studentId, score, studentSubject)) { // 과목이 없을 때
+                    gradeConvertor = findGradeConvertor(studentSubject);
 
-                    if (gradeConvertor == null) {
+                    if (Objects.isNull(gradeConvertor)) {
                         System.out.println("등록되어있지 않은 과목입니다. 과목 고유번호: " + studentSubject);
                         return;
                     }
 
-                    int studentScore = sc.nextInt();
-                    Score scoreObj = new Score(gradeConvertor, studentSubject, studentId, studentScore);
+                    scoreObj = new Score(
+                            gradeConvertor,
+                            studentSubject,
+                            studentId,
+                            new HashMap<>(), // 회차, 점수
+                            new HashMap<>() // 회차, 등급
+                    ); //스코어 객체 생성!!!!!
 
-                    Grade grade = scoreObj.calculateGrade(); // 점수 -> 등급
-                    System.out.println(
-                            "학생 고유번호: " + studentId +
-                                    ", 과목 고유번호: " + studentSubject +
-                                    ", 점수: " + studentScore +
-                                    ", 등급: " + grade);
+                } else if (isInScoreRepository(studentId, score, studentSubject)) { // 과목이 있을 때
+                    scoreObj = score;
 
-                    scoreStore.add(scoreObj);
-                    System.out.println("\n점수 등록 성공!");
+                } else {
+                    continue;
                 }
+
+                int times = scoreObj.getScoreMap().size(); // 현재까지 등록된 회차, 새로운 스코어 객체는 0회차
+
+                System.out.print(studentSubject + "과목의" + (times + 1) + "회차 점수를 저장합니다.\n점수를 입력해주세요: ");
+                int studentScore = sc.nextInt();
+
+                while (0 > studentScore || studentScore > 100) { //점수 제한부분 해결!!!
+                    System.out.println("잘못된 점수를 입력했습니다. 입력한 점수: " + studentScore);
+                    studentScore = sc.nextInt();
+                }
+
+                if (times >= 10) {
+                    System.out.println("현재 '10 회차'까지 시험을 완료한 학생입니다. 더 이상 시험점수를 저장할 수 없습니다.");
+                    return;
+                }
+
+                scoreObj.getScoreMap().put(++times, studentScore); // ++times == 1;
+                Grade grade = scoreObj.calculateGrade(); // 점수 -> 등급
+                System.out.println(
+                        "학생 고유번호: " + studentId +
+                                ", 과목 고유번호: " + studentSubject +
+                                ", 점수: " + studentScore +
+                                ", 등급: " + grade
+                );
+
+                scoreStore.add(scoreObj); // -> 저장소에 저장
+                System.out.println("\n점수 등록 성공!");
             }
         }
     }
 
-    private GradeConvertor findGradeConvertor(String studentSubject) {
+    private static boolean isInScoreRepository(String studentId, Score score, String studentSubject) {
+        return score.getStudentId().equals(studentId) && score.getSubjectId().equals(studentSubject);
+    }
+
+    private GradeConvertor findGradeConvertor(String studentSubject) { // 컨버터 -> 점수 => 등급으로 바꿔주는 친구
 
         for (Subject subject : subjectStore) {
-            if (subject.getSubjectId().equals(studentSubject)) {
-                if (subject.getSubjectType().equals(SUBJECT_TYPE_MANDATORY)) {
-                    return new RequiredSubConvertor();
+            // 학생이 수강하는 과목을 꺼내서 -> 그 과목이 필수인지, 선택인지 확인
+            if (subject.getSubjectId().equals(studentSubject)) { // 과목 고유번호를 가지고 저장소에서 일치하는 과목을 찾아준다.
+
+                if (subject.getSubjectType().equals(MANDATORY.name())) { //필수냐 선택냐?
+                    return new RequiredSubConvertor(); // 필수
                 } else {
-                    return new OptionalSubConvertor();
+                    return new OptionalSubConvertor(); // 선택
                 }
             }
         }
@@ -342,18 +380,19 @@ public class CampManagementApplication {
     }
 
     // 수강생의 과목별 회차 점수 수정
-    // 학생 고유 번호, 수강하는 과목 고유 번호
+// 학생 고유 번호, 수강하는 과목 고유 번호
     public void updateRoundScoreBySubject() {
-        // 1.inquireStudent 함수 이용
+
         inquireStudent();
-
-        // 2.getStudentId 함수 이용
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
-
-        // 3.과목 리스트(해당 수강생이 등록한 과목 리스트)
-        // 학생 고유번호를 통해 학생을 특정 -> 반환
+        List<String> studentSubjects = findStudentSubjects(studentId);
 
         // 4.회차(1 ~ 10)
+        for (String studentSubject : studentSubjects) {
+//            studentSubject   ----------------------------------->여기서 부터 다시 시작
+        }
+
+
         // 점수 저장소 안에 학생이 수강한 과목의 점수가 등록되어있어야한다. (조건문) -> 반환 받을 수 있다. -> 수학 score.getTimes() -> 회차 반환
         // 학생 고유번호를 통해 얻어낸 학생의 회차를 확인
 
@@ -380,5 +419,4 @@ public class CampManagementApplication {
         // 5.결과 보여주기
         System.out.println("\n등급 조회 성공!");
     }
-
 }

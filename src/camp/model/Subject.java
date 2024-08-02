@@ -1,5 +1,7 @@
 package camp.model;
 
+import camp.cont.SubjectType;
+
 import java.util.List;
 
 // 과목

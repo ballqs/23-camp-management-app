@@ -8,7 +8,7 @@ public interface ManagementInterface<T> {
     T select(List<T> list , String id);
 
     // 전체 조회
-    void selectAll(List<T> list);
+    void selectAll (List<T> list);
 
     // 수정
     T update();
