@@ -4,60 +4,89 @@ import camp.enums.IndexType;
 import camp.enums.SubjectType;
 import camp.model.Subject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Init {
 
     // 과목 초기 데이터 생성
-    public List<Subject> setInitData() {
+    public Map<String , Subject> setInitData() {
         Sequence sequence = new Sequence();
-        List<Subject> subjectStore = List.of(
+        Map<String , Subject> subjectStore = new HashMap<>();
+        String id = "";
+
+        id = sequence.sequence(IndexType.SU.name());
+        subjectStore.put(id ,
                 new Subject(
-                        sequence.sequence(IndexType.SU.name()),
-                        "Java",
-                        SubjectType.MANDATORY.name()
-                ),
+                    id,
+                    "Java",
+                    SubjectType.MANDATORY.name()
+        ));
+
+        id = sequence.sequence(IndexType.SU.name());
+        subjectStore.put(id ,
                 new Subject(
-                        sequence.sequence(IndexType.SU.name()),
-                        "객체지향",
-                        SubjectType.MANDATORY.name()
-                ),
+                    id,
+                    "객체지향",
+                    SubjectType.MANDATORY.name()
+                ));
+
+        id = sequence.sequence(IndexType.SU.name());
+        subjectStore.put(id ,
                 new Subject(
-                        sequence.sequence(IndexType.SU.name()),
-                        "Spring",
-                        SubjectType.MANDATORY.name()
-                ),
+                    id,
+                    "Spring",
+                    SubjectType.MANDATORY.name()
+                ));
+
+        id = sequence.sequence(IndexType.SU.name());
+        subjectStore.put(id ,
                 new Subject(
-                        sequence.sequence(IndexType.SU.name()),
-                        "JPA",
-                        SubjectType.MANDATORY.name()
-                ),
+                    id,
+                    "JPA",
+                    SubjectType.MANDATORY.name()
+                ));
+
+        id = sequence.sequence(IndexType.SU.name());
+        subjectStore.put(id ,
                 new Subject(
-                        sequence.sequence(IndexType.SU.name()),
-                        "MySQL",
-                        SubjectType.MANDATORY.name()
-                ),
+                    id,
+                    "MySQL",
+                    SubjectType.MANDATORY.name()
+                ));
+
+        id = sequence.sequence(IndexType.SU.name());
+        subjectStore.put(id ,
                 new Subject(
-                        sequence.sequence(IndexType.SU.name()),
-                        "디자인 패턴",
-                        SubjectType.CHOICE.name()
-                ),
+                    id,
+                    "디자인 패턴",
+                    SubjectType.CHOICE.name()
+                ));
+
+        id = sequence.sequence(IndexType.SU.name());
+        subjectStore.put(id ,
                 new Subject(
-                        sequence.sequence(IndexType.SU.name()),
-                        "Spring Security",
-                        SubjectType.CHOICE.name()
-                ),
+                    id,
+                    "Spring Security",
+                    SubjectType.CHOICE.name()
+                ));
+
+        id = sequence.sequence(IndexType.SU.name());
+        subjectStore.put(id ,
                 new Subject(
-                        sequence.sequence(IndexType.SU.name()),
-                        "Redis",
-                        SubjectType.CHOICE.name()
-                ),
+                    id,
+                    "Redis",
+                    SubjectType.CHOICE.name()
+                ));
+
+        id = sequence.sequence(IndexType.SU.name());
+        subjectStore.put(id ,
                 new Subject(
-                        sequence.sequence(IndexType.SU.name()),
-                        "MongoDB",
-                        SubjectType.CHOICE.name()
-                )
-        );
+                    id,
+                    "MongoDB",
+                    SubjectType.CHOICE.name()
+                ));
         return subjectStore;
     }
 }

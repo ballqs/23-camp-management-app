@@ -4,18 +4,18 @@ import java.util.List;
 
 public interface ManagementInterface<T> {
 
-    // 1개 조회용
-    T select(List<T> list , String id);
+    // 1개 가지고 오는 용도
+    T getData(String str);
 
     // 전체 조회
-    void selectAll(List<T> list);
+    void selectAll();
 
     // 수정
-    T update();
+    void update(String id , String fleid , String value);
 
     // 삭제
-    T delete();
+    void delete();
 
     // 등록
-    T insert();
+    void insert();
 }
