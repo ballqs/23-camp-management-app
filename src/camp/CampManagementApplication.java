@@ -1,5 +1,7 @@
 package camp;
 
+import camp.cont.IndexType;
+import camp.model.Score;
 import camp.model.score.*;
 import camp.model.Student;
 import camp.model.Subject;
@@ -27,15 +29,11 @@ public class CampManagementApplication {
 
     public Sequence sequence = new Sequence();
 
-    // 과목 타입
-    public String SUBJECT_TYPE_MANDATORY = "MANDATORY";     // 필수
-    public String SUBJECT_TYPE_CHOICE = "CHOICE";           // 선택
 
     // index 관리 필드
     public static int studentIndex;
-    public final static String INDEX_TYPE_STUDENT = "ST";          // ST + 숫자 => 수강생 고유번호
     public static int subjectIndex;
-    public final static String INDEX_TYPE_SUBJECT = "SU";          // SU + 숫자 => 과목 고유번호
+
 //    private static int scoreIndex;                                // 사용안함
 //    private static final String INDEX_TYPE_SCORE = "SC";          // 사용안함
 
@@ -123,7 +121,7 @@ public class CampManagementApplication {
             String subjectId = sc.next(); // 과목 고유번호
 
             // null이 리턴될 경우 어떻게 처리할지
-            Subject subject = subjectManagement.select(subjectStore, subjectId);
+            Subject subject = subjectManagement.select(subjectStore , subjectId);
 
             // null 검증
             if (Objects.isNull(subject)) {
@@ -158,7 +156,7 @@ public class CampManagementApplication {
         }
 
         // 4.studentStore 에 저장
-        Student student = new Student(sequence.sequence(INDEX_TYPE_STUDENT), studentName, (ArrayList) subjectList); // 수강생 인스턴스 생성 예시 코드
+        Student student = new Student(sequence.sequence(IndexType.ST.name()), studentName , (ArrayList) subjectList); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
         System.out.println("수강생 등록 성공!\n");
     }
