@@ -1,17 +1,20 @@
 package camp;
 
+import camp.data.Data;
+import camp.enums.IndexType;
+
 public class Sequence {
 
     // index 자동 증가
     public String sequence(String type) {
         switch (type) {
-            case CampManagementApplication.INDEX_TYPE_STUDENT -> {
-                CampManagementApplication.studentIndex++;
-                return CampManagementApplication.INDEX_TYPE_STUDENT + CampManagementApplication.studentIndex;
+            case "ST" -> {
+                Data.studentIndex++;
+                return IndexType.ST.name() + Data.studentIndex;
             }
-            case CampManagementApplication.INDEX_TYPE_SUBJECT -> {
-                CampManagementApplication.subjectIndex++;
-                return CampManagementApplication.INDEX_TYPE_SUBJECT + CampManagementApplication.subjectIndex;
+            case "SU" -> {
+                Data.subjectIndex++;
+                return IndexType.SU.name() + Data.subjectIndex;
             }
             default -> {
 //                scoreIndex++;

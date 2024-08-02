@@ -1,5 +1,7 @@
 package camp;
 
+import camp.enums.IndexType;
+import camp.enums.SubjectType;
 import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
@@ -27,15 +29,6 @@ public class CampManagementApplication {
 
     public Sequence sequence = new Sequence();
 
-    // 과목 타입
-    public String SUBJECT_TYPE_MANDATORY = "MANDATORY";     // 필수
-    public String SUBJECT_TYPE_CHOICE = "CHOICE";           // 선택
-
-    // index 관리 필드
-    public static int studentIndex;
-    public final static String INDEX_TYPE_STUDENT = "ST";          // ST + 숫자 => 수강생 고유번호
-    public static int subjectIndex;
-    public final static String INDEX_TYPE_SUBJECT = "SU";          // SU + 숫자 => 과목 고유번호
 //    private static int scoreIndex;                                // 사용안함
 //    private static final String INDEX_TYPE_SCORE = "SC";          // 사용안함
 
@@ -115,8 +108,8 @@ public class CampManagementApplication {
         subjectManagement.selectAll(subjectStore);
 
         // 3.과목 담기
-        int required = 0;
-        int choice = 0;
+        int required = 0;   // 필수
+        int choice = 0;     // 선택
         List<Subject> subjectList = new ArrayList<>();
         while (true) {
             System.out.print("과목 고유번호 입력: ");
@@ -131,17 +124,18 @@ public class CampManagementApplication {
                 continue;
             }
 
-            // 중복으로 등록된건지 검증
+            // 중복으로 등록된건지 검증 (anyMatch : 일치하는게 있는지 검증[return boolean])
+            // subject 이게 명칭 중복 등 문제가 있으면 다른 명칭으로 대체
             if (subjectList.stream().anyMatch(it -> it.getSubjectId().equals(subject.getSubjectId()))) {
                 System.out.println("이미 등록된 과목이 있습니다.");
                 continue;
             }
             subjectList.add(subject);
 
-            if (subject.getSubjectType().equals("MANDATORY")) {
-                required++;
+            if (subject.getSubjectType().equals(SubjectType.MANDATORY.name())) {
+                required++;     // 필수 증가
             } else {
-                choice++;
+                choice++;       // 선택 증가
             }
 
             if (required < 3 || choice < 2) {
@@ -158,7 +152,7 @@ public class CampManagementApplication {
         }
 
         // 4.studentStore 에 저장
-        Student student = new Student(sequence.sequence(INDEX_TYPE_STUDENT), studentName , (ArrayList) subjectList); // 수강생 인스턴스 생성 예시 코드
+        Student student = new Student(sequence.sequence(IndexType.ST.name()), studentName , (ArrayList) subjectList); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
         System.out.println("수강생 등록 성공!\n");
     }
