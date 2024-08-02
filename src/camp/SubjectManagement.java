@@ -1,43 +1,39 @@
 package camp;
 
+import camp.data.Data;
 import camp.model.Subject;
 
 import java.util.List;
 
 public class SubjectManagement implements ManagementInterface<Subject>{
     @Override
-    public Subject select(List<Subject> subjectStore , String subjectId) {
-        for (Subject subject : subjectStore) {
-            if (subject.getSubjectId().equals(subjectId)) {
-                return subject;
-            }
-        }
-        return null;
+    public Subject getData(String value) {
+        return Data.subjectStore.get(value);
     }
 
     @Override
-    public void selectAll(List<Subject> subjectStore) {
+    public void selectAll() {
         System.out.println("==================================");
-        for (Subject list : subjectStore) {
-            System.out.println("과목 고유번호 : " + list.getSubjectId());
-            System.out.println("과목 이름 : " + list.getSubjectName());
-            System.out.println("과목 타입 : " + list.getSubjectType());
+        for (String str : Data.subjectStore.keySet()) {
+            System.out.println("과목 고유번호 : " + Data.subjectStore.get(str).getSubjectId());
+            System.out.println("과목 이름 : " + Data.subjectStore.get(str).getSubjectName());
+            System.out.println("과목 타입 : " + Data.subjectStore.get(str).getSubjectType());
             System.out.println("==================================");
         }
     }
 
     @Override
-    public Subject update() {
-        return null;
+    public void update(String id , String fleid , String value) {
+
     }
 
     @Override
-    public Subject delete() {
-        return null;
+    public void delete() {
+
     }
 
     @Override
-    public Subject insert() {
-        return null;
+    public void insert() {
+
     }
 }
