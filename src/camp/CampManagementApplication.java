@@ -1,8 +1,6 @@
 package camp;
 
-import camp.model.score.Grade;
-import camp.model.score.RequiredSubConvertor;
-import camp.model.score.Score;
+import camp.model.score.*;
 import camp.model.Student;
 import camp.model.Subject;
 
@@ -125,7 +123,7 @@ public class CampManagementApplication {
             String subjectId = sc.next(); // 과목 고유번호
 
             // null이 리턴될 경우 어떻게 처리할지
-            Subject subject = subjectManagement.select(subjectStore , subjectId);
+            Subject subject = subjectManagement.select(subjectStore, subjectId);
 
             // null 검증
             if (Objects.isNull(subject)) {
@@ -160,7 +158,7 @@ public class CampManagementApplication {
         }
 
         // 4.studentStore 에 저장
-        Student student = new Student(sequence.sequence(INDEX_TYPE_STUDENT), studentName , (ArrayList) subjectList); // 수강생 인스턴스 생성 예시 코드
+        Student student = new Student(sequence.sequence(INDEX_TYPE_STUDENT), studentName, (ArrayList) subjectList); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
         System.out.println("수강생 등록 성공!\n");
     }
@@ -197,11 +195,6 @@ public class CampManagementApplication {
                 }
             }
         }
-    }
-
-    public String getStudentId() {
-        System.out.print("\n관리할 수강생의 번호를 입력하시오...");
-        return sc.next();
     }
 
     /**
@@ -241,7 +234,10 @@ public class CampManagementApplication {
      * <p>
      * 5-2. 위 조건문을 통과했다면 이제 Score 인스턴스를 생성해서 등록할 준비를 하자.
      * <p>
-     * a. new Score(new RequiredSubConvertor(), studentSubject, studentId, sc.nextInt());로 객체를 생성.
+     * a. findGradeConvertor(studentSubject);를 이용해서 필수 || 선택중 컨버터를 선택한다.
+     * -> 컨버터는 Score를 생성할 때, 같이 넘겨준다.
+     * -> gradeConvertor가 null일 수도 있으니, 조건문으로 확인해준다.
+     * -> new Score(gradeConvertor, studentSubject, studentId, sc.nextInt());로 객체를 생성.
      * -> Score는 생성자로 점수를 등급으로 변환할 컨버터, 저장할 과목의 고유번호, 저장할 학생의 고유번호, 점수를 받는다.
      * -> 등록할 점수는 scanner로 받는다.
      * <p>
@@ -264,18 +260,24 @@ public class CampManagementApplication {
         inquireStudent();
 
         // 2.
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        String studentId = getStudentId(); // 관리할 수강생 고유 번호 -> 학생의 존재여부 확인?
 
         // 3.
-        List<String> studentSubjects = findStudentSubjects(studentId); // 관리할 학생의 수강 과목
+        List<String> studentSubjects = findStudentSubjects(studentId); // 관리할 학생의 수강 과목 고유번호
 
         // 4.
         if (studentSubjects == null) {
+            System.out.println("학생이 수강하는 과목이 없습니다...");
             return; // try catch 생각
         }
 
         // 5.
         registerScore(studentSubjects, studentId);
+    }
+
+    public String getStudentId() {
+        System.out.print("\n관리할 수강생의 번호를 입력하시오...");
+        return sc.next();
     }
 
 
@@ -286,12 +288,21 @@ public class CampManagementApplication {
                 if (isNotInScoreRepository(studentId, score, studentSubject)) {
                     System.out.print(studentSubject + "의 점수를 저장합니다.\n점수를 입력해주세요: ");
                     // 5-2.
+
+                    GradeConvertor gradeConvertor = findGradeConvertor(studentSubject);
+
+                    if (gradeConvertor == null) {
+                        System.out.println("등록되어있지 않은 과목입니다. 과목 고유번호: " + studentSubject);
+                        return;
+                    }
+
                     int studentScore = sc.nextInt();
-                    Score scoreObj = new Score(new RequiredSubConvertor(), studentSubject, studentId, studentScore);
+                    Score scoreObj = new Score(gradeConvertor, studentSubject, studentId, studentScore);
+
                     Grade grade = scoreObj.calculateGrade(); // 점수 -> 등급
                     System.out.println(
                             "학생 고유번호: " + studentId +
-                                    ", 과목: " + studentSubject +
+                                    ", 과목 고유번호: " + studentSubject +
                                     ", 점수: " + studentScore +
                                     ", 등급: " + grade);
 
@@ -302,18 +313,25 @@ public class CampManagementApplication {
         }
     }
 
+    private GradeConvertor findGradeConvertor(String studentSubject) {
+
+        for (Subject subject : subjectStore) {
+            if (subject.getSubjectId().equals(studentSubject)) {
+                if (subject.getSubjectType().equals(SUBJECT_TYPE_MANDATORY)) {
+                    return new RequiredSubConvertor();
+                } else {
+                    return new OptionalSubConvertor();
+                }
+            }
+        }
+
+        return null;
+    }
+
     private static boolean isNotInScoreRepository(String studentId, Score score, String studentSubject) {
         return score.getStudentId().equals(studentId) && !(score.getSubjectId().equals(studentSubject));
     }
 
-    /**
-     * findStudentSubjects는 학생 저장소를 하나씩 꺼내서 원하는 학생 고유번호랑 일치하는지 확인하고,
-     * 일치하면 그 학생의 수강 과목을 리스트로 반환한다.
-     * 아니면 null을 반환한다.
-     *
-     * @param studentId
-     * @return
-     */
     private List<String> findStudentSubjects(String studentId) { //학생의 전체 수강과목을 알고싶다.
         for (Student student : studentStore) {
             if (student.getStudentId().equals(studentId)) {
@@ -322,7 +340,6 @@ public class CampManagementApplication {
                 return subjectList;
             }
         }
-        System.out.println("등록한 과목 리스트가 없습니다...");
         return null;
     }
 
