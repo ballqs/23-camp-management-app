@@ -43,10 +43,8 @@ public class Subject {
 
     @Override
     public String toString() {
-        return "Subject{" +
-                "subjectId='" + subjectId + '\'' +
-                ", subjectName='" + subjectName + '\'' +
-                ", subjectType='" + subjectType + '\'' +
-                '}';
+        return "과목명: " + subjectName +
+                ", 과목 번호: " + subjectId +
+                ", 과목 타입: " + subjectType;
     }
 }

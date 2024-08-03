@@ -50,11 +50,9 @@ public class Score {
 
     @Override
     public String toString() {
-        return "Score{" +
-                ", 학생 고유번호:'" + studentId + '\'' +
-                ", 과목 고유번호:'" + subjectId + '\'' +
-                ", 회차, 점수: " + scoreMap +
-                ", 회차, 등급: " + gradeMap +
-                '}';
+        return "학생 고유번호:'" + studentId + "\n" +
+                ", 과목 고유번호:'" + subjectId + "\n" +
+                ", 최신 회차, 최신 점수: " + scoreMap.size() + +scoreMap.get(scoreMap.size()) + "\n" +
+                ", 최신 회차, 최신 등급: " + gradeMap + scoreMap.size() + +scoreMap.get(scoreMap.size());
     }
 }

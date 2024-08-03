@@ -232,7 +232,6 @@ public class CampManagementApplication {
     }
 
     public void createScore() {
-        ScoreController scoreController;
         StudentManagement studentManagement = new StudentManagement();
 
         inquireStudent(); // 학생 목록 조회
@@ -240,11 +239,11 @@ public class CampManagementApplication {
         String studentId = getStudentId(); // 수강생 고유 번호
         Map<String, Subject> subjectMap = studentManagement.getData(studentId).getSubjectList();// 수강 과목맵
 
-        register(subjectMap, studentId);
+        registerScore(subjectMap, studentId);
     }
 
 
-    private void register(Map<String, Subject> subjectMap, String studentId) {
+    private void registerScore(Map<String, Subject> subjectMap, String studentId) {
         ScoreController scoreController = new ScoreController();
         Score score;
 
@@ -253,12 +252,13 @@ public class CampManagementApplication {
 
             // 컨트롤러 호출
             try {
-                score = scoreController.findScoreInStore(studentId, subject);
+                // (학생 + 과목) 점수가 등록되어 있는 지 확인, 없으면 등록할 Score객체를 새로 만듦.
+                score = scoreController.findScoreInStore(studentId, subject.getSubjectId());
                 if (score == null) {
                     score = scoreController.createScore(studentId, subject);
                 }
 
-
+                //10회차 이상인지 확인
                 if (score.getScoreMap().size() >= 10) {
                     throw new IllegalStateException("최대 10회차까지만 등록이 가능합니다.");
                 }
@@ -294,7 +294,7 @@ public class CampManagementApplication {
                     subjectScore = sc.nextInt();
                 }
 
-                scoreController.registerScore(subjectScore, score);
+                scoreController.register(subjectScore, score);
             } catch (RuntimeException e) {
                 System.out.println(e.getMessage());
             }
@@ -303,22 +303,57 @@ public class CampManagementApplication {
 
 
     public void updateRoundScoreBySubject() {
+        StudentManagement studentManagement = new StudentManagement();
 
-        inquireStudent();
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        inquireStudent(); // 등록된 학생 전체 조회
+        String studentId = getStudentId();// 학생 고유 번호
+        sc.nextLine(); // 줄먹
+        Map<String, Subject> subjectMap = studentManagement.getData(studentId).getSubjectList(); // 학생 수강 과목
 
-        // 4.회차(1 ~ 10)
+        updateScore(studentId, subjectMap);
 
-        // 점수 저장소 안에 학생이 수강한 과목의 점수가 등록되어있어야한다. (조건문) -> 반환 받을 수 있다. -> 수학 score.getTimes() -> 회차 반환
-        // 학생 고유번호를 통해 얻어낸 학생의 회차를 확인
+    }
 
-        // 5.점수 수정
-        System.out.println("시험 점수를 수정합니다...");
+    private void updateScore(String studentId, Map<String, Subject> subjectMap) {
+        ScoreController scoreController = new ScoreController();
 
-        // 6.등급 매기기
+        for (String key : subjectMap.keySet()) { // 수강 과목 정보 출력
+            System.out.println(subjectMap.get(key).toString());
+        }
 
-        // 7.수정
-        System.out.println("\n점수 수정 성공!");
+        // 수정할 과목 점수 찾기
+        System.out.print("수정할 과목 번호를 입력하세요: ");
+        String subjectId = sc.nextLine(); // 수정 할 과목 번호 받기
+        Score score = scoreController.findScoreInStore(studentId, subjectId); // 수정 할 과목의 score 찾기
+
+        // 수정할 점수 존재하는지 검증 로직
+        if (score == null) {
+            System.out.println("점수가 등록되지 않은 과목입니다.");
+            return;
+        }
+
+        // 수정할 과목의 각 회차 점수를 출력
+        System.out.println(subjectMap.get(subjectId).getSubjectName() + "과목의 회차별 점수 출력");
+        for (int i = 0; i < score.getScoreMap().size(); i++) {
+            System.out.println("*" + (i + 1) + "회차 " + score.getScoreMap().get(i + 1) + "점");
+        }
+
+        // 수정할 회차 입력받기
+        System.out.print("수정할 회차를 입력하세요: ");
+        int times = sc.nextInt();
+
+        // 입력 받은 회차가 1~10회차가 아니면 다시 받기
+        while (!(0 < times && times <= 10)) {
+            System.out.print("존재하지 않는 회차입니다.\n다시 입력해주세요: ");
+            times = sc.nextInt();
+        }
+
+        // 변경할 점수 입력받기
+        System.out.print("변경할 점수를 입력해주세요: ");
+        int scoreToChange = sc.nextInt();
+
+        // 업데이트 컨트롤러 호출 -> 수정할 score 객체, 회차, 변경할 점수 넘겨줘야함.
+        scoreController.update(score, times, scoreToChange);
     }
 
     // 수강생의 특정 과목 회차별 등급 조회
