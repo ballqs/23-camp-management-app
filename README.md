@@ -1,7 +1,6 @@
 ![header](https://capsule-render.vercel.app/api?text=23조%20수강생%20관리%20시스템&animation=fadeIn&type=Venom&fontColor=ffffff)
 
 # 프로젝트 개요
-***
 이 프로젝트는 Java 강의를 통해 배운 내용을 바탕으로 개발된 간단한 수강생 관리 시스템입니다. 이 시스템은 Java의 기본 입력 방법인 `Scanner` 클래스를 활용하여 사용자로부터 데이터를 입력받고, 이를 바탕으로 수강생의 등록 및 점수 관리를 수행합니다.
 
 # 기능 명세서
