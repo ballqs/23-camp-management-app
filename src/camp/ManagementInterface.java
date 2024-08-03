@@ -7,6 +7,8 @@ public interface ManagementInterface<T> {
     // 1개 가지고 오는 용도
     T getData(String str);
 
+    void select(T info);
+
     // 전체 조회
     void selectAll();
 
@@ -17,5 +19,5 @@ public interface ManagementInterface<T> {
     void delete();
 
     // 등록
-    void insert();
+    void insert(String key , T info);
 }

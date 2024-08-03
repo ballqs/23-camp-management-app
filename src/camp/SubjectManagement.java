@@ -12,6 +12,11 @@ public class SubjectManagement implements ManagementInterface<Subject>{
     }
 
     @Override
+    public void select(Subject info) {
+
+    }
+
+    @Override
     public void selectAll() {
         System.out.println("==================================");
         for (String str : Data.subjectStore.keySet()) {
@@ -33,7 +38,7 @@ public class SubjectManagement implements ManagementInterface<Subject>{
     }
 
     @Override
-    public void insert() {
+    public void insert(String key , Subject subject) {
 
     }
 }

@@ -2,15 +2,19 @@ package camp;
 
 import camp.data.Data;
 import camp.model.Student;
-import camp.model.Subject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentManagement implements ManagementInterface<Student>{
     @Override
-    public Student getData(String value) {
-        return Data.studentStore.get(value);
+    public Student getData(String key) {
+        return Data.studentStore.get(key);
+    }
+
+    @Override
+    public void select(Student info) {
+
     }
 
     @Override
@@ -28,6 +32,7 @@ public class StudentManagement implements ManagementInterface<Student>{
             System.out.println("==================================");
         }
     }
+
 
     @Override
     public void update(String id , String fleid , String value) {
@@ -49,7 +54,11 @@ public class StudentManagement implements ManagementInterface<Student>{
     }
 
     @Override
-    public void insert() {
+    public void insert(String key , Student student) {
+        Data.studentStore.put(key , student);
+    }
 
+    public boolean lenCheck() {
+        return Data.studentStore.size() > 0 ? true : false;
     }
 }
