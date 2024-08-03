@@ -4,14 +4,14 @@ import camp.data.Data;
 import camp.enums.IndexType;
 import camp.enums.StudentStatusType;
 import camp.enums.SubjectType;
-import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
+import camp.repository.StudentManagement;
+import camp.repository.SubjectManagement;
 
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -41,8 +41,6 @@ public class CampManagementApplication {
         CampManagementApplication campManagementApplication = new CampManagementApplication();
         try {
             campManagementApplication.displayMainView();
-        } catch (IllegalArgumentException e) {
-            System.out.println(e);
         } catch (Exception e) {
             System.out.println("\n오류 발생!\n프로그램을 종료합니다.");
         }
@@ -184,22 +182,26 @@ public class CampManagementApplication {
             String studentId = getStudentId("\n수정할 수강생의 번호를 입력하시오..."); //수강생 고유번호
 
             Student student = studentManagement.getData(studentId);
+            if (!Objects.isNull(student)) {
+                System.out.println("수정하려는 수강생 정보는 아래와 같습니다.");
+                studentManagement.select(student);
 
-            System.out.println("수정하려는 수강생 정보는 아래와 같습니다.");
-            studentManagement.select(student);
+                System.out.println("==================================");
+                System.out.println("1.이름");
+                System.out.println("2.상태");
+                System.out.print("변경할 항목을 선택하세요...");
+                int input = sc.nextInt(); // 상태 번호
 
-            System.out.println("==================================");
-            System.out.println("1.이름");
-            System.out.println("2.상태");
-            System.out.print("변경할 항목을 선택하세요...");
-            int input = sc.nextInt(); // 상태 번호
-
-            switch (input) {
-                case 1 -> changeStudentName(student.getStudentId());
-                case 2 -> changeStudentStatus(student.getStudentId());
-                default -> {
-                    System.out.println("잘못된 입력입니다.\n이전 화면 이동...");
+                switch (input) {
+                    case 1 -> changeStudentName(student.getStudentId());
+                    case 2 -> changeStudentStatus(student.getStudentId());
+                    default -> {
+                        System.out.println("잘못된 입력입니다.\n이전 화면 이동...");
+                    }
                 }
+            } else {
+                System.out.println("==================================");
+                System.out.println("입력하신 수강생 고유번호는 존재하지 않습니다.\n이전 화면 이동...");
             }
         } else {
             System.out.println("==================================");
@@ -269,9 +271,12 @@ public class CampManagementApplication {
         StudentManagement studentManagement = new StudentManagement();
         inquireStudent();
         String studentId = getStudentId("\n삭제할 수강생의 번호를 입력하시오..."); //수강생 고유번호
-
-        studentManagement.delete(studentId);
-        System.out.println("\n수강생 정보 삭제 완료!");
+        if (!Objects.isNull(studentManagement.getData(studentId))) {
+            studentManagement.delete(studentId);
+            System.out.println("\n수강생 정보 삭제 완료!");
+        } else {
+            System.out.println("\n잘못된 수강생 번호입니다. 이전화면으로 이동...");
+        }
     }
 
     public void displayScoreView() {

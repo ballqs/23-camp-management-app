@@ -1,4 +1,4 @@
-package camp;
+package camp.interfaces;
 
 import java.util.List;
 

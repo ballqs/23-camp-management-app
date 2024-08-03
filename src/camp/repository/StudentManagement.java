@@ -1,13 +1,14 @@
-package camp;
+package camp.repository;
 
 import camp.data.Data;
 import camp.enums.StudentStatusType;
+import camp.interfaces.ManagementInterface;
 import camp.model.Student;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentManagement implements ManagementInterface<Student>{
+public class StudentManagement implements ManagementInterface<Student> {
     @Override
     public Student getData(String key) {
         return Data.studentStore.get(key);
