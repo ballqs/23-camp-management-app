@@ -2,6 +2,7 @@ package camp;
 
 import camp.data.Data;
 import camp.enums.IndexType;
+import camp.enums.StudentStatusType;
 import camp.enums.SubjectType;
 import camp.model.Score;
 import camp.model.Student;
@@ -40,13 +41,14 @@ public class CampManagementApplication {
         CampManagementApplication campManagementApplication = new CampManagementApplication();
         try {
             campManagementApplication.displayMainView();
+        } catch (IllegalArgumentException e) {
+            System.out.println(e);
         } catch (Exception e) {
             System.out.println("\n오류 발생!\n프로그램을 종료합니다.");
         }
     }
 
     public void displayMainView() throws InterruptedException {
-
         boolean flag = true;
         while (flag) {
             System.out.println("\n==================================");
@@ -79,7 +81,8 @@ public class CampManagementApplication {
             System.out.println("2. 수강생 목록 조회");
             System.out.println("3. 수강생 정보 수정");
             System.out.println("4. 상태별 수강생 목록 조회");
-            System.out.println("5. 메인 화면 이동");
+            System.out.println("5. 수강생 삭제");
+            System.out.println("6. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
 
@@ -87,8 +90,9 @@ public class CampManagementApplication {
                 case 1 -> createStudent(); // 수강생 등록
                 case 2 -> inquireStudent(); // 수강생 목록 조회
                 case 3 -> updateStudent(); // 수강생 정보 수정
-                case 4 -> flag = false; // 상태별 수강생 목록 조회
-                case 5 -> flag = false; // 메인 화면 이동
+                case 4 -> selectStatus(); // 상태별 수강생 목록 조회
+                case 5 -> deleteStudent(); // 수강생 삭제
+                case 6 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
@@ -155,7 +159,7 @@ public class CampManagementApplication {
 
         String id = sequence.sequence(IndexType.ST.name());
         // 4.studentStore 에 저장
-        Student student = new Student(id, studentName , subjectList ,"Green"); // 수강생 인스턴스 생성 예시 코드
+        Student student = new Student(id, studentName , subjectList ,StudentStatusType.Green.name()); // 수강생 인스턴스 생성 예시 코드
         StudentManagement studentManagement = new StudentManagement();
         studentManagement.insert(id , student);
         // 기능 구현
@@ -177,7 +181,7 @@ public class CampManagementApplication {
 
         if (studentManagement.lenCheck()) {
             inquireStudent();
-            String studentId = getStudentId(); //수강생 고유번호
+            String studentId = getStudentId("\n수정할 수강생의 번호를 입력하시오..."); //수강생 고유번호
 
             Student student = studentManagement.getData(studentId);
 
@@ -216,34 +220,58 @@ public class CampManagementApplication {
 
     // 수강생 상태 변경
     public void  changeStudentStatus(String studentId) {
+        StudentManagement studentManagement = new StudentManagement();
+
         String status = "";
         while (true) {
             System.out.println("==================================");
             System.out.println("수강생 상태 종류");
-            System.out.println("1.Green");
-            System.out.println("2.Red");
-            System.out.println("3.Yellow");
+            studentManagement.statusList();
             System.out.print("변경할 항목을 선택하세요...");
             int input = sc.nextInt(); // 상태 번호
 
-            switch (input) {
-                case 1 -> status = "Green";
-                case 2 -> status = "Red";
-                case 3 -> status = "Yellow";
-                default -> {
-                    status = "";
-                    System.out.println("잘못된 입력입니다.");
-                }
-            }
-
-            if (!status.isEmpty()) {
+            if (input < 1 || input > StudentStatusType.values().length) {
+                System.out.println("잘못된 입력입니다.");
+            } else {
+                status = StudentStatusType.getStatus(input).name();
                 break;
             }
         }
 
-        StudentManagement studentManagement = new StudentManagement();
         studentManagement.update(studentId , "studentStatus" , status);
         System.out.println("\n수강생 상태 변경 성공!");
+    }
+
+    // 상태별 수강생 목록을 조회
+    public void selectStatus() {
+        StudentManagement studentManagement = new StudentManagement();
+
+        String status = "";
+        while (true) {
+            System.out.println("==================================");
+            System.out.println("수강생 상태 종류");
+            studentManagement.statusList();
+            System.out.print("조회할 항목을 선택하세요...");
+            int input = sc.nextInt();
+
+            if (input < 1 || input > StudentStatusType.values().length) {
+                System.out.println("잘못된 입력입니다.");
+            } else {
+                status = StudentStatusType.getStatus(input).name();
+                break;
+            }
+        }
+        studentManagement.selectStatusStudent(status);
+    }
+    
+    // 수강생 삭제
+    public void deleteStudent() {
+        StudentManagement studentManagement = new StudentManagement();
+        inquireStudent();
+        String studentId = getStudentId("\n삭제할 수강생의 번호를 입력하시오..."); //수강생 고유번호
+
+        studentManagement.delete(studentId);
+        System.out.println("\n수강생 정보 삭제 완료!");
     }
 
     public void displayScoreView() {
@@ -271,8 +299,8 @@ public class CampManagementApplication {
         }
     }
 
-    public String getStudentId() {
-        System.out.print("\n관리할 수강생의 번호를 입력하시오...");
+    public String getStudentId(String msg) {
+        System.out.print(msg);
         return sc.next();
     }
 
@@ -280,7 +308,7 @@ public class CampManagementApplication {
     public void createScore() {
         // 1.inquireStudent 함수 이용
         // 2.getStudentId 함수 이용
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        String studentId = getStudentId(""); // 관리할 수강생 고유 번호
 
         // 3.과목 리스트(해당 수강생이 등록한 과목 리스트)
 
@@ -299,7 +327,7 @@ public class CampManagementApplication {
     public void updateRoundScoreBySubject() {
         // 1.inquireStudent 함수 이용
         // 2.getStudentId 함수 이용
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        String studentId = getStudentId(""); // 관리할 수강생 고유 번호
 
         // 3.과목 리스트(해당 수강생이 등록한 과목 리스트)
 
@@ -318,7 +346,7 @@ public class CampManagementApplication {
     public void inquireRoundGradeBySubject() {
         // 1.inquireStudent 함수 이용
         // 2.getStudentId 함수 이용
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        String studentId = getStudentId(""); // 관리할 수강생 고유 번호
 
         // 3.과목 리스트(해당 수강생이 등록한 과목 리스트)
 

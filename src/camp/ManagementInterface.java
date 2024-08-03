@@ -16,7 +16,7 @@ public interface ManagementInterface<T> {
     void update(String id , String fleid , String value);
 
     // 삭제
-    void delete();
+    void delete(String id);
 
     // 등록
     void insert(String key , T info);

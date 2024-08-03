@@ -33,7 +33,7 @@ public class SubjectManagement implements ManagementInterface<Subject>{
     }
 
     @Override
-    public void delete() {
+    public void delete(String id) {
 
     }
 

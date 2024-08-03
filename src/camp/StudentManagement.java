@@ -1,6 +1,7 @@
 package camp;
 
 import camp.data.Data;
+import camp.enums.StudentStatusType;
 import camp.model.Student;
 
 import java.util.ArrayList;
@@ -49,8 +50,8 @@ public class StudentManagement implements ManagementInterface<Student>{
     }
 
     @Override
-    public void delete() {
-
+    public void delete(String id) {
+        Data.studentStore.remove(id);
     }
 
     @Override
@@ -60,5 +61,36 @@ public class StudentManagement implements ManagementInterface<Student>{
 
     public boolean lenCheck() {
         return Data.studentStore.size() > 0 ? true : false;
+    }
+
+    public void statusList() {
+        StudentStatusType[] studentStatusType = StudentStatusType.values();
+        for (int i = 0; i < studentStatusType.length; i++) {
+            System.out.println((i + 1) + "." + studentStatusType[i]);
+        }
+    }
+
+    // 상태별 수강생 리스트 조회
+    public void selectStatusStudent(String status) {
+        List<Student> list = new ArrayList<>();
+        for (String str : Data.studentStore.keySet()) {
+            Student student = Data.studentStore.get(str);
+            if (student.getStudentStatus().equals(status)) {
+                list.add(student);
+            }
+        }
+
+        System.out.println("==================================");
+        for (Student student : list) {
+            List<String> sub = new ArrayList<>();
+            for(String subject : student.getSubjectList().keySet()) {
+                sub.add(student.getSubjectList().get(subject).getSubjectName());
+            }
+            System.out.println("수강생 고유번호 : " + student.getStudentId());
+            System.out.println("수강생 이름 : " + student.getStudentName());
+            System.out.println("수강생 과목 : " + String.join(",", sub));
+            System.out.println("수강생 상태 : " + student.getStudentStatus());
+            System.out.println("==================================");
+        }
     }
 }
