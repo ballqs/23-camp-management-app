@@ -1,16 +1,19 @@
 package camp.model.score.controller;
 
+import camp.StudentManagement;
 import camp.model.Subject;
 import camp.model.score.gradeconvertor.GradeConvertor;
 import camp.model.score.gradeconvertor.RequiredSubConvertor;
 import camp.model.score.Score;
 
+import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.Map;
 
 import static camp.data.Data.scoreStore;
 
 public class ScoreController {
+
 
     /**
      * 저장할 Score 객체를 생성
@@ -30,8 +33,13 @@ public class ScoreController {
         score.calculateGrade();
 
         String storeKey = makeKey(score.getStudentId(), score.getSubjectId());
-        scoreStore.put(storeKey, score);
 
+        //새로 등록되는 Score는 저장소에 등록
+        if (scoreMap.size() == 1) {
+            scoreStore.put(storeKey, score);
+        }
+
+        // 등록한 정보 출력
         checkCompletePrinter(storeKey, times);
     }
 
