@@ -1,6 +1,5 @@
 package camp;
 
-import camp.data.Data;
 import camp.enums.IndexType;
 import camp.enums.StudentStatusType;
 import camp.enums.SubjectType;
@@ -11,7 +10,6 @@ import camp.repository.SubjectManagement;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -34,9 +32,7 @@ public class CampManagementApplication {
     public Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        Data.studentStore = new HashMap<>();
-        Data.scoreStore = new ArrayList<>();
-        Data.subjectStore = new Init().setInitData();
+        Init.setInitData(); // 초기 설정
 
         CampManagementApplication campManagementApplication = new CampManagementApplication();
         try {
@@ -146,6 +142,7 @@ public class CampManagementApplication {
                 System.out.println("등록된 과목은 현재 필수 : " + required + " , 선택 : " + choice);
                 System.out.println("과목을 더 등록해주세요.");
             } else {
+                System.out.println("등록된 과목은 현재 필수 : " + required + " , 선택 : " + choice);
                 System.out.println("과목을 더 등록하시겠습니까?");
                 String result = sc.next(); // 과목 고유번호
                 if (!result.equals("예")) {
@@ -235,7 +232,7 @@ public class CampManagementApplication {
             if (input < 1 || input > StudentStatusType.values().length) {
                 System.out.println("잘못된 입력입니다.");
             } else {
-                status = StudentStatusType.getStatus(input).name();
+                status = StudentStatusType.getStatus(input);
                 break;
             }
         }
@@ -259,7 +256,7 @@ public class CampManagementApplication {
             if (input < 1 || input > StudentStatusType.values().length) {
                 System.out.println("잘못된 입력입니다.");
             } else {
-                status = StudentStatusType.getStatus(input).name();
+                status = StudentStatusType.getStatus(input);
                 break;
             }
         }

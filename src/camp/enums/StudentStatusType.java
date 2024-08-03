@@ -9,7 +9,7 @@ public enum StudentStatusType {
         this.index = n;
     }
 
-    public static StudentStatusType getStatus(int n) {
-        return StudentStatusType.values()[n-1]; // less safe
+    public static String getStatus(int n) {
+        return StudentStatusType.values()[n-1].name(); // less safe
     }
 }

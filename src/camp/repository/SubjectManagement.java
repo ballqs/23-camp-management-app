@@ -38,6 +38,6 @@ public class SubjectManagement implements ManagementInterface<Subject> {
 
     @Override
     public void insert(String key , Subject subject) {
-
+        Data.subjectStore.put(key , subject);
     }
 }
