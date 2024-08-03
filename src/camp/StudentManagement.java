@@ -9,6 +9,7 @@ import java.util.List;
 
 public class StudentManagement implements ManagementInterface<Student>{
 
+    // value -> studentId
     public Student getData(String value) {
         return Data.studentStore.get(value);
     }

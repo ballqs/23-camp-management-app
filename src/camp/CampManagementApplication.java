@@ -237,7 +237,8 @@ public class CampManagementApplication {
         inquireStudent(); // 학생 목록 조회
 
         String studentId = getStudentId(); // 수강생 고유 번호
-        Map<String, Subject> subjectMap = studentManagement.getData(studentId).getSubjectList();// 수강 과목맵
+        Student student = studentManagement.getData(studentId);
+        Map<String, Subject> subjectMap = student.getSubjectList();// 수강 과목맵
 
         registerScore(subjectMap, studentId);
     }
@@ -253,16 +254,16 @@ public class CampManagementApplication {
             // 컨트롤러 호출
             try {
                 // (학생 + 과목) 점수가 등록되어 있는 지 확인, 없으면 등록할 Score객체를 새로 만듦.
-                score = scoreController.findScoreInStore(studentId, subject.getSubjectId());
+                score = scoreController.findScoreInStore(studentId, subject.getSubjectId()); // 점수 저장소 안에 Score를 가져온다.
                 if (score == null) {
-                    score = scoreController.createScore(studentId, subject);
+                    score = scoreController.createScore(studentId, subject); // new Score();
                 }
 
                 //10회차 이상인지 확인
                 if (score.getScoreMap().size() >= 10) {
                     throw new IllegalStateException("최대 10회차까지만 등록이 가능합니다.");
                 }
-
+//======================================================================================================================
 
                 int option;
                 do {
@@ -281,7 +282,7 @@ public class CampManagementApplication {
                             break;
 
                         case 2:
-                            throw new IllegalStateException(subject.getSubjectName() + "의 점수를 등록하지 않습니다.");
+                            throw new IllegalStateException(subject.getSubjectName() + "의 점수를 등록하지 않습니다."); // 예외 발생!!
 
                         default:
                             System.out.println("옵션을 잘못 입력하셨습니다.\n");
@@ -342,7 +343,7 @@ public class CampManagementApplication {
         System.out.print("수정할 회차를 입력하세요: ");
         int times = sc.nextInt();
 
-        // 입력 받은 회차가 1~10회차가 아니면 다시 받기
+        // 입력 받은 회차가 1~10회차가 아니면 다시 받기 -> 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!
         while (!(0 < times && times <= 10)) {
             System.out.print("존재하지 않는 회차입니다.\n다시 입력해주세요: ");
             times = sc.nextInt();
