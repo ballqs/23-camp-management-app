@@ -1,6 +1,7 @@
 package camp.model.score.controller;
 
 import camp.model.Subject;
+import camp.model.score.gradeconvertor.Grade;
 import camp.model.score.gradeconvertor.GradeConvertor;
 import camp.model.score.gradeconvertor.RequiredSubConvertor;
 import camp.model.score.Score;
@@ -19,9 +20,9 @@ public class ScoreController {
     public Score findScoreById(String studentId, String subjectId) {
         return scoreStore.getOrDefault(makeKey(studentId, subjectId), null);
     }
-    
+
     /**
-     * 학생의 등록된 Score 모두 반환 -> A학생의 등록된 점수 모두를 가져오면 됨 -> 학생 ID만 필요 
+     * 학생의 등록된 Score 모두 반환 -> A학생의 등록된 점수 모두를 가져오면 됨 -> 학생 ID만 필요
      */
     public List<Score> findAllScoreByStudentId(String studentId) {
         List<Score> scores = new ArrayList<>();
@@ -45,11 +46,13 @@ public class ScoreController {
      */
     public void register(int subjectScore, Score score) {
         Map<Integer, Integer> scoreMap = score.getScoreMap();
+        Map<Integer, Grade> gradeMap = score.getGradeMap();
 
-        int times = score.getScoreMap().size(); // 회차
-        scoreMap.put(++times, subjectScore); // 회차에 따른 점수 저장
-        score.calculateGrade(); // 점수에 따른 등급 저장
+        int times = score.getScoreMap().size(); // 현재 저장되어있는 회차(진행중인 작업 아직 등록 전)
+        scoreMap.put(score.getScoreMap().size() + 1, subjectScore); // 회차에 따른 점수 저장
 
+        Grade grade = score.calculateGrade(subjectScore);// 점수에 따른 등급 저장
+        gradeMap.put(times + 1, grade);
         String storeKey = makeKey(score.getStudentId(), score.getSubjectId()); // 점수 저장소의 key값 생성
 
         //최초 등록되는 Score는 저장소에 등록
@@ -63,7 +66,8 @@ public class ScoreController {
      */
     public void update(Score score, int times, int scoreToChange) {
         score.getScoreMap().replace(times, scoreToChange);
-        String storeKey = makeKey(score.getStudentId(), score.getSubjectId());
+        Grade grade = score.calculateGrade(scoreToChange);
+        score.getGradeMap().replace(times, grade);
     }
 
 

@@ -1,14 +1,21 @@
 package camp.model.score.service;
 
 import camp.StudentManagement;
+import camp.model.Student;
 import camp.model.Subject;
 import camp.model.score.Score;
 import camp.model.score.controller.ScoreController;
+import camp.model.score.gradeconvertor.Grade;
+import camp.model.score.gradeconvertor.GradeConvertor;
+import camp.model.score.gradeconvertor.RequiredSubConvertor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 import static camp.data.Data.*;
+import static camp.enums.SubjectType.*;
 
 public class ScoreService {
 
@@ -34,6 +41,7 @@ public class ScoreService {
             Subject subject = subjectStore.get(subjectId.toString());
             score = scoreController.createScore(studentId, subject); // new Score(); //subject는 ID와 Type이 필요.
         }
+
 
         // Score의 회차가 10회차 이상이면 안된다.
         if (score.getScoreMap().size() >= 10) {
@@ -67,9 +75,9 @@ public class ScoreService {
         scoreController.register(subjectScore, score);
 
         // 결과 출력
-        System.out.println("=====등록 결과 확인 시작=====");
-        CompletePrinter(score);
-        System.out.println("=====등록 결과 확인 종료=====\n");
+        System.out.println("*****등록 결과 확인 시작*****");
+        completePrinter(score, score.getScoreMap().size());
+        System.out.println("*****등록 결과 확인 종료*****\n");
 
     }
 
@@ -89,7 +97,7 @@ public class ScoreService {
         // 수정할 과목의 각 회차별 점수를 출력
         System.out.println(subjectStore.get(score.getSubjectId()).getSubjectName() + "과목의 회차별 점수 출력");
         for (int i = 0; i < score.getScoreMap().size(); i++) {
-            System.out.println("*" + (i + 1) + "회차 " + score.getScoreMap().get(i + 1) + "점");
+            System.out.println("-" + (i + 1) + "회차 " + score.getScoreMap().get(i + 1) + "점");
         }
 
         // 수정할 회차 입력받기
@@ -104,9 +112,9 @@ public class ScoreService {
         scoreController.update(score, times, scoreToChange);
 
         // 결과 출력
-        System.out.println("=====수정 결과 확인 시작=====");
-        CompletePrinter(score, times);
-        System.out.println("=====수정 결과 확인 종료=====\n");
+        System.out.println("*****수정 결과 확인 시작*****");
+        completePrinter(score, times);
+        System.out.println("*****수정 결과 확인 종료*****\n");
     }
 
     private int inputScore() {
@@ -125,28 +133,86 @@ public class ScoreService {
         String studentId = designateStudentId(); // 조회할 학생 ID
         Score score = getSpecificScore(studentId); // 학생 ID에 일치하는 등록된 Score -> scoreController.findScoreInStore()
 
-        // score가 null이면 조회할 점수가 없다는 뜻이므로 돌아간다.
-        if (score == null) {
-            throw new IllegalStateException("***조회할 점수가 등록되지 않은 과목입니다.***\n");
+        System.out.print("1. 회차별 등급 조회 | 2. 특정 과목 평균등급 조회 | 3. 필수과목 평균등급 조회\n선택한 옵션: ");
+        int option = scanner.nextInt();
+
+        switch (option) {
+            case 1 -> {
+                for (int i = 0; i < score.getScoreMap().size(); i++) {
+                    System.out.println("*****수정 결과 확인 시작*****");
+                    completePrinter(score, (i + 1));
+                    System.out.println("*****수정 결과 확인 종료*****");
+
+                }
+
+                /* 특정 과목, 특정 회차 조회 로직
+                System.out.println(
+                        subjectStore.get("===" + score.getSubjectId()).getSubjectName() + "과목의 회차별 등급 조회==="
+                );
+                for (int i = 0; i < score.getScoreMap().size(); i++) {
+                    System.out.println(
+                            "*" + (i + 1) + "회차 " +
+                                    score.getScoreMap().get(i + 1) + "점 " +
+                                    "등급: " + score.getGradeMap().get(i + 1));
+                }*/
+            }
+
+            case 2 -> {
+                // 과목의 모든 회차의 점수를 담는다.
+                Map<Integer, Integer> scoreMap = score.getScoreMap();
+
+                int sumScore = 0;
+                for (int i = 0; i < scoreMap.size(); i++) {
+                    sumScore += scoreMap.get(i + 1);
+                }
+
+                //점수의 평균값
+                int averageScore = sumScore / scoreMap.size();
+
+                Grade grade = score.calculateGrade(averageScore);
+                System.out.println("=====평균등급 조회 결과 확인 시작=====");
+                System.out.println(
+                        "학생 ID: " + score.getSubjectId() +
+                                "\n과목명: " + subjectStore.get(score.getSubjectId()).getSubjectName() +
+                                "\n평균 점수: " + averageScore +
+                                "\n평균 등급: " + grade
+                );
+                System.out.println("=====평균등급 조회 결과 확인 종료=====");
+            }
+
+            case 3 -> {
+                // 학생의 등록된 점수 다 가져오기
+                List<Score> scores = scoreController.findAllScoreByStudentId(studentId);
+
+                // 필수확인 && 필수과목 회차별 점수 합 담기
+                ArrayList<Integer> mandatoryScoreNum = new ArrayList<>();
+                scores.stream()
+                        .filter(scored ->
+                            subjectStore.get(scored.getSubjectId()).getSubjectType().equals(MANDATORY.name()))
+                        .forEach(scored -> {
+                            Map<Integer, Integer> scoreMap = scored.getScoreMap();
+                            for (Integer key : scoreMap.keySet()) {
+                                mandatoryScoreNum.add(scoreMap.get(key));
+                            }
+                        });
+
+                int sumScored = 0;
+                for (Integer scoreNum : mandatoryScoreNum) {
+                    sumScored += scoreNum;
+                }
+
+                GradeConvertor requiredGradeConvertor = new RequiredSubConvertor();
+                int averageMandatory = sumScored / mandatoryScoreNum.size();
+                System.out.println(
+                        "학생 ID: " + studentId+
+                                "\n필수 과목 평균 점수: " + sumScored +
+                                "\n필수 과목 평균 등급: " + requiredGradeConvertor.ScoreToGrade(averageMandatory)
+                );
+            }
+
+            default -> throw new IllegalStateException("잘못된 옵션을 선택했습니다.");
         }
-
-        // 몇 회차까지 등록되어 있는지 출력
-        System.out.println(
-                subjectStore.get(score.getSubjectId()).getSubjectName() + "과목은 " +
-                        score.getScoreMap().size() + "회차까지 등록되어있습니다."
-        );
-
-        // 조회할 회차 입력 받기
-        int times = designateTimes(score);
-
-        // 5.결과 보여주기
-        System.out.println("=====조회 결과 확인 시작=====");
-        CompletePrinter(score, times);
-        System.out.println("=====조회 결과 확인 종료=====\n");
-
-
     }
-
 
     // PRIVATE ZONE=====================================================================================================
 
@@ -156,7 +222,13 @@ public class ScoreService {
     private String designateStudentId() {
         studentManagement.selectAll(); // 학생 목록 조회
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
-        return scanner.nextLine();
+        String studentId = scanner.nextLine();
+
+        if (studentManagement.getData(studentId) == null) {
+            throw new IllegalStateException("등록되지 않은 학생 정보입니다.");
+        }
+
+        return studentId;
     }
 
     /**
@@ -164,6 +236,7 @@ public class ScoreService {
      * target 학생의 등록된 점수 가져오기 -> updateRoundScoreBySubject(), inquireRoundGradeBySubject()에서 사용
      */
     private Score getSpecificScore(String studentId) {
+
         Map<String, Subject> subjectMap = studentManagement.getData(studentId).getSubjectList();// 학생의 수강과목들
         for (String key : subjectMap.keySet()) { // 수강 과목 정보 출력
             System.out.println(subjectMap.get(key).toString());
@@ -186,7 +259,13 @@ public class ScoreService {
      * target 학생의 등록된 점수 가져오기 -> createScore()에서 사용 -> null일 경우 subjectId가 필요함
      */
     private Score getSpecificScore(String studentId, StringBuilder sbSubjectId) {
-        Map<String, Subject> subjectMap = studentManagement.getData(studentId).getSubjectList();// 학생의 수강과목들
+        Student student = studentManagement.getData(studentId);
+
+        if (student == null) {
+            throw new IllegalStateException("등록되지 않은 학생 정보입니다.");
+        }
+
+        Map<String, Subject> subjectMap = student.getSubjectList();// 학생의 수강과목들
         for (String key : subjectMap.keySet()) { // 수강 과목 정보 출력
             System.out.println(subjectMap.get(key).toString());
         }
@@ -222,26 +301,14 @@ public class ScoreService {
     }
 
     /**
-     * 작업을 완료후 확인차 출력해주는 프린터 -> 조회, 수정에서 사용
+     * 작업을 완료후 확인차 출력해주는 프린터
      */
-    private void CompletePrinter(Score score, int times) {
+    private void completePrinter(Score score, int times) {
         System.out.println("전체 회차: " + score.getScoreMap().size());
-        System.out.println("학생 번호: " + score.getStudentId());
-        System.out.println("과목 번호: " + score.getSubjectId());
-        System.out.println("작업 회차: " + times);
+        System.out.println("학생명: " + studentManagement.getData(score.getStudentId()).getStudentName());
+        System.out.println("과목명: " + subjectStore.get(score.getSubjectId()).getSubjectName());
+        System.out.println("회차: " + times);
         System.out.println("점수: " + score.getScoreMap().get(times));
         System.out.println("등급: " + score.getGradeMap().get(times));
     }
-
-    /**
-     * 작업을 완료후 확인차 출력해주는 프린터 -> 등록에서 사용
-     */
-    private void CompletePrinter(Score score) {
-        System.out.println("학생 번호: " + score.getStudentId());
-        System.out.println("과목 번호: " + score.getSubjectId());
-        System.out.println("작업 회차: " + score.getScoreMap().size());
-        System.out.println("점수: " + score.getScoreMap().get(score.getScoreMap().size()));
-        System.out.println("등급: " + score.getGradeMap().get(score.getScoreMap().size()));
-    }
-
 }

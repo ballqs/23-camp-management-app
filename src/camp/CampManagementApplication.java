@@ -222,7 +222,6 @@ public class CampManagementApplication {
             System.out.println("4. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
-            sc.nextLine(); // 줄먹
 
             try {
                 switch (input) {
@@ -236,7 +235,7 @@ public class CampManagementApplication {
                     }
                 }
             } catch (RuntimeException e) {
-                System.out.println(e.getMessage());
+                System.out.println("오류 메시지: " + e.getMessage() + "\n점수 관리 메인화면으로 돌아갑니다.");
             }
         }
     }

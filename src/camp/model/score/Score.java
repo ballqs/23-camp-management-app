@@ -42,10 +42,8 @@ public class Score {
         return gradeMap;
     }
 
-    public Grade calculateGrade() {
-        Grade grade = gradeConvertor.ScoreToGrade(scoreMap);
-        gradeMap.put(gradeMap.size() + 1, grade);
-        return grade;
+    public Grade calculateGrade(int score) {
+        return gradeConvertor.ScoreToGrade(score);
     }
 
     @Override
