@@ -27,7 +27,7 @@ public class CampManagementApplication {
 
 //    private static int scoreIndex;                                // 사용안함
 
-//    private static final String INDEX_TYPE_SCORE = "SC";          // 사용안함
+    //    private static final String INDEX_TYPE_SCORE = "SC";          // 사용안함
     // 스캐너
     public Scanner sc = new Scanner(System.in);
 
@@ -211,7 +211,7 @@ public class CampManagementApplication {
     }
 
     public void displayScoreView() {
-        ScoreService scoreService = new ScoreService();
+        ScoreService scoreService = new ScoreService(sc);
         boolean flag = true;
         while (flag) {
             System.out.println("==================================");
@@ -222,12 +222,13 @@ public class CampManagementApplication {
             System.out.println("4. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
+            sc.nextLine(); // 줄먹
 
             try {
                 switch (input) {
                     case 1 -> scoreService.createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
                     case 2 -> scoreService.updateRoundScoreBySubject();// 수강생의 과목별 회차 점수 수정
-                    case 3 -> inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
+                    case 3 -> scoreService.inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
                     case 4 -> flag = false; // 메인 화면 이동
                     default -> {
                         System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
@@ -238,21 +239,5 @@ public class CampManagementApplication {
                 System.out.println(e.getMessage());
             }
         }
-    }
-
-    // 수강생의 특정 과목 회차별 등급 조회
-
-    public void inquireRoundGradeBySubject() {
-        // 1.inquireStudent 함수 이용
-        // 2.getStudentId 함수 이용
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-
-        // 3.과목 리스트(해당 수강생이 등록한 과목 리스트)
-
-        // 4.회차(1 ~ 10)
-        System.out.println("회차별 등급을 조회합니다...");
-
-        // 5.결과 보여주기
-        System.out.println("\n등급 조회 성공!");
     }
 }
