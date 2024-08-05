@@ -1,91 +1,29 @@
 package camp;
 
+import camp.data.Data;
 import camp.enums.IndexType;
-import camp.enums.SubjectType;
+import camp.enums.SubjectList;
 import camp.model.Subject;
+import camp.repository.SubjectManagement;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Init {
 
-    // 과목 초기 데이터 생성
-    public Map<String , Subject> setInitData() {
+    // 초기 설정
+    public static void setInitData() {
+        Data.studentStore = new HashMap<>();
+        Data.subjectStore = new HashMap<>();
+        Data.scoreStore = new HashMap<>();
+
         Sequence sequence = new Sequence();
-        Map<String , Subject> subjectStore = new HashMap<>();
+        SubjectManagement subjectManagement = new SubjectManagement();
+
         String id = "";
-
-        id = sequence.sequence(IndexType.SU.name());
-        subjectStore.put(id ,
-                new Subject(
-                    id,
-                    "Java",
-                    SubjectType.MANDATORY.name()
-        ));
-
-        id = sequence.sequence(IndexType.SU.name());
-        subjectStore.put(id ,
-                new Subject(
-                    id,
-                    "객체지향",
-                    SubjectType.MANDATORY.name()
-                ));
-
-        id = sequence.sequence(IndexType.SU.name());
-        subjectStore.put(id ,
-                new Subject(
-                    id,
-                    "Spring",
-                    SubjectType.MANDATORY.name()
-                ));
-
-        id = sequence.sequence(IndexType.SU.name());
-        subjectStore.put(id ,
-                new Subject(
-                    id,
-                    "JPA",
-                    SubjectType.MANDATORY.name()
-                ));
-
-        id = sequence.sequence(IndexType.SU.name());
-        subjectStore.put(id ,
-                new Subject(
-                    id,
-                    "MySQL",
-                    SubjectType.MANDATORY.name()
-                ));
-
-        id = sequence.sequence(IndexType.SU.name());
-        subjectStore.put(id ,
-                new Subject(
-                    id,
-                    "디자인 패턴",
-                    SubjectType.CHOICE.name()
-                ));
-
-        id = sequence.sequence(IndexType.SU.name());
-        subjectStore.put(id ,
-                new Subject(
-                    id,
-                    "Spring Security",
-                    SubjectType.CHOICE.name()
-                ));
-
-        id = sequence.sequence(IndexType.SU.name());
-        subjectStore.put(id ,
-                new Subject(
-                    id,
-                    "Redis",
-                    SubjectType.CHOICE.name()
-                ));
-
-        id = sequence.sequence(IndexType.SU.name());
-        subjectStore.put(id ,
-                new Subject(
-                    id,
-                    "MongoDB",
-                    SubjectType.CHOICE.name()
-                ));
-        return subjectStore;
+        for (int i = 0; i < SubjectList.values().length; i++) {
+            id = sequence.sequence(IndexType.SU.name());
+            subjectManagement.insert(id , new Subject(id , SubjectList.values()[i].getName() , SubjectList.values()[i].getType().name()));
+        }
     }
 }

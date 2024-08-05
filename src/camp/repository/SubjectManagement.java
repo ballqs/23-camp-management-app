@@ -1,20 +1,18 @@
-package camp;
+package camp.repository;
 
 import camp.data.Data;
+import camp.interfaces.ManagementInterface;
 import camp.model.Subject;
 
-import java.util.List;
-
-public class SubjectManagement implements ManagementInterface<Subject>{
-
-
+public class SubjectManagement implements ManagementInterface<Subject> {
+    @Override
     public Subject getData(String value) {
         return Data.subjectStore.get(value);
     }
 
     @Override
-    public Subject select(List<Subject> list, String id) {
-        return null;
+    public void select(Subject info) {
+
     }
 
     @Override
@@ -29,17 +27,17 @@ public class SubjectManagement implements ManagementInterface<Subject>{
     }
 
     @Override
-    public Subject update(String id , String fleid , String value) {
-        return null;
+    public void update(String id , String fleid , String value) {
+
     }
 
     @Override
-    public Subject delete() {
-        return null;
+    public void delete(String id) {
+
     }
 
     @Override
-    public Subject insert() {
-        return null;
+    public void insert(String key , Subject subject) {
+        Data.subjectStore.put(key , subject);
     }
 }

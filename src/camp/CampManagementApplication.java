@@ -1,17 +1,18 @@
 package camp;
 
-import camp.data.Data;
 import camp.enums.IndexType;
+import camp.enums.StudentStatusType;
 import camp.enums.SubjectType;
 import camp.model.Student;
 import camp.model.Subject;
 import camp.model.score.service.ScoreService;
+import camp.repository.StudentManagement;
+import camp.repository.SubjectManagement;
 
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
-
 
 /**
  * Notification
@@ -26,15 +27,13 @@ public class CampManagementApplication {
     public Sequence sequence = new Sequence();
 
 //    private static int scoreIndex;                                // 사용안함
+//    private static final String INDEX_TYPE_SCORE = "SC";          // 사용안함
 
-    //    private static final String INDEX_TYPE_SCORE = "SC";          // 사용안함
     // 스캐너
     public Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        Data.studentStore = new HashMap<>();
-        Data.scoreStore = new HashMap<>();
-        Data.subjectStore = new Init().setInitData();
+        Init.setInitData(); // 초기 설정
 
         CampManagementApplication campManagementApplication = new CampManagementApplication();
         try {
@@ -76,16 +75,20 @@ public class CampManagementApplication {
             System.out.println("수강생 관리 실행 중...");
             System.out.println("1. 수강생 등록");
             System.out.println("2. 수강생 목록 조회");
-            System.out.println("3. 수강생 상태 변경");
-            System.out.println("4. 메인 화면 이동");
+            System.out.println("3. 수강생 정보 수정");
+            System.out.println("4. 상태별 수강생 목록 조회");
+            System.out.println("5. 수강생 삭제");
+            System.out.println("6. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
 
             switch (input) {
                 case 1 -> createStudent(); // 수강생 등록
                 case 2 -> inquireStudent(); // 수강생 목록 조회
-                case 3 -> changeStudentStatus();
-                case 4 -> flag = false; // 메인 화면 이동
+                case 3 -> updateStudent(); // 수강생 정보 수정
+                case 4 -> selectStatus(); // 상태별 수강생 목록 조회
+                case 5 -> deleteStudent(); // 수강생 삭제
+                case 6 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
@@ -109,7 +112,7 @@ public class CampManagementApplication {
         // 3.과목 담기
         int required = 0;   // 필수
         int choice = 0;     // 선택
-        Map<String, Subject> subjectList = new HashMap<>();
+        Map<String , Subject> subjectList = new HashMap<>();
         while (true) {
             System.out.print("과목 고유번호 입력: ");
             String subjectId = sc.next(); // 과목 고유번호
@@ -129,7 +132,7 @@ public class CampManagementApplication {
                 System.out.println("이미 등록된 과목이 있습니다.");
                 continue;
             }
-            subjectList.put(subject.getSubjectId(), subject);
+            subjectList.put(subject.getSubjectId() , subject);
 
             if (subject.getSubjectType().equals(SubjectType.MANDATORY.name())) {
                 required++;     // 필수 증가
@@ -141,6 +144,7 @@ public class CampManagementApplication {
                 System.out.println("등록된 과목은 현재 필수 : " + required + " , 선택 : " + choice);
                 System.out.println("과목을 더 등록해주세요.");
             } else {
+                System.out.println("등록된 과목은 현재 필수 : " + required + " , 선택 : " + choice);
                 System.out.println("과목을 더 등록하시겠습니까?");
                 String result = sc.next(); // 과목 고유번호
                 if (!result.equals("예")) {
@@ -152,8 +156,9 @@ public class CampManagementApplication {
 
         String id = sequence.sequence(IndexType.ST.name());
         // 4.studentStore 에 저장
-        Student student = new Student(id, studentName, subjectList, "Green"); // 수강생 인스턴스 생성 예시 코드
-        Data.studentStore.put(id, student);
+        Student student = new Student(id, studentName , subjectList ,StudentStatusType.Green.name()); // 수강생 인스턴스 생성 예시 코드
+        StudentManagement studentManagement = new StudentManagement();
+        studentManagement.insert(id , student);
         // 기능 구현
         System.out.println("수강생 등록 성공!\n");
     }
@@ -167,42 +172,110 @@ public class CampManagementApplication {
         System.out.println("\n수강생 목록 조회 성공!");
     }
 
-    // 수강생 상태 관리
-    public void changeStudentStatus() {
-        inquireStudent();
-        String studentId = getStudentId(); //수강생 고유번호
+    // 수강생 정보 수정
+    public void updateStudent() {
+        StudentManagement studentManagement = new StudentManagement();
+
+        if (studentManagement.lenCheck()) {
+            inquireStudent();
+            String studentId = getStudentId("\n수정할 수강생의 번호를 입력하시오..."); //수강생 고유번호
+
+            Student student = studentManagement.getData(studentId);
+            if (!Objects.isNull(student)) {
+                System.out.println("수정하려는 수강생 정보는 아래와 같습니다.");
+                studentManagement.select(student);
+
+                System.out.println("==================================");
+                System.out.println("1.이름");
+                System.out.println("2.상태");
+                System.out.print("변경할 항목을 선택하세요...");
+                int input = sc.nextInt(); // 상태 번호
+
+                switch (input) {
+                    case 1 -> changeStudentName(student.getStudentId());
+                    case 2 -> changeStudentStatus(student.getStudentId());
+                    default -> {
+                        System.out.println("잘못된 입력입니다.\n이전 화면 이동...");
+                    }
+                }
+            } else {
+                System.out.println("==================================");
+                System.out.println("입력하신 수강생 고유번호는 존재하지 않습니다.\n이전 화면 이동...");
+            }
+        } else {
+            System.out.println("==================================");
+            System.out.println("등록된 수강생이 없습니다. 등록 후 진행해주세요.");
+        }
+    }
+
+    // 수강생 이름 변경
+    public void changeStudentName(String studentId) {
+        System.out.println("==================================");
+        System.out.print("변경하실 수강생 이름을 입력해주세요...");
+        String subjectName = sc.next(); // 수강생 이름
 
         StudentManagement studentManagement = new StudentManagement();
-        Student student = studentManagement.getData(studentId);
+        studentManagement.update(studentId , "studentName" , subjectName);
+        System.out.println("\n수강생 이름 변경 성공!");
+    }
+
+    // 수강생 상태 변경
+    public void  changeStudentStatus(String studentId) {
+        StudentManagement studentManagement = new StudentManagement();
 
         String status = "";
         while (true) {
             System.out.println("==================================");
-            System.out.println("수강생 상태 리스트");
-            System.out.println("1.Green");
-            System.out.println("2.Red");
-            System.out.println("3.Yellow");
+            System.out.println("수강생 상태 종류");
+            studentManagement.statusList();
             System.out.print("변경할 항목을 선택하세요...");
             int input = sc.nextInt(); // 상태 번호
 
-            switch (input) {
-                case 1 -> status = "Green";
-                case 2 -> status = "Red";
-                case 3 -> status = "Yellow";
-                default -> {
-                    status = "Error";
-                }
-            }
-            if (!status.equals("Error")) {
-                student.setStudentStatus(status);
-                break;
-            } else {
+            if (input < 1 || input > StudentStatusType.values().length) {
                 System.out.println("잘못된 입력입니다.");
+            } else {
+                status = StudentStatusType.getStatus(input);
+                break;
             }
         }
 
-        studentManagement.update(studentId, "studentStatus", status);
+        studentManagement.update(studentId , "studentStatus" , status);
         System.out.println("\n수강생 상태 변경 성공!");
+    }
+
+    // 상태별 수강생 목록을 조회
+    public void selectStatus() {
+        StudentManagement studentManagement = new StudentManagement();
+
+        String status = "";
+        while (true) {
+            System.out.println("==================================");
+            System.out.println("수강생 상태 종류");
+            studentManagement.statusList();
+            System.out.print("조회할 항목을 선택하세요...");
+            int input = sc.nextInt();
+
+            if (input < 1 || input > StudentStatusType.values().length) {
+                System.out.println("잘못된 입력입니다.");
+            } else {
+                status = StudentStatusType.getStatus(input);
+                break;
+            }
+        }
+        studentManagement.selectStatusStudent(status);
+    }
+
+    // 수강생 삭제
+    public void deleteStudent() {
+        StudentManagement studentManagement = new StudentManagement();
+        inquireStudent();
+        String studentId = getStudentId("\n삭제할 수강생의 번호를 입력하시오..."); //수강생 고유번호
+        if (!Objects.isNull(studentManagement.getData(studentId))) {
+            studentManagement.delete(studentId);
+            System.out.println("\n수강생 정보 삭제 완료!");
+        } else {
+            System.out.println("\n잘못된 수강생 번호입니다. 이전화면으로 이동...");
+        }
     }
 
     public String getStudentId() {
