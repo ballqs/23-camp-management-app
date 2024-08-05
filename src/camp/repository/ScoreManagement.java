@@ -1,16 +1,17 @@
-package camp.model.score.controller;
+package camp.repository;
 
+import camp.data.Data;
 import camp.model.Subject;
-import camp.model.score.gradeconvertor.Grade;
-import camp.model.score.gradeconvertor.GradeConvertor;
-import camp.model.score.gradeconvertor.RequiredSubConvertor;
-import camp.model.score.Score;
+import camp.enums.Grade;
+import camp.interfaces.GradeConvertor;
+import camp.function.RequiredSubConvertor;
+import camp.model.Score;
 
 import java.util.*;
 
 import static camp.data.Data.scoreStore;
 
-public class ScoreController {
+public class ScoreManagement {
 
 
     /**
@@ -68,6 +69,16 @@ public class ScoreController {
         score.getScoreMap().replace(times, scoreToChange);
         Grade grade = score.calculateGrade(scoreToChange);
         score.getGradeMap().replace(times, grade);
+    }
+
+    public void delete(String studentId) {
+        Map<String , Score> map = Data.scoreStore;
+        for (String str : Set.copyOf(map.keySet())) {
+            Score score = map.get(str);
+            if (score.getStudentId().equals(studentId)) {
+                map.remove(str);
+            }
+        }
     }
 
 

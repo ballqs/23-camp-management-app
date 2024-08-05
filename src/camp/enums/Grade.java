@@ -1,4 +1,4 @@
-package camp.model.score.gradeconvertor;
+package camp.enums;
 
 public enum Grade {
 

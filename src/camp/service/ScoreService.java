@@ -1,13 +1,14 @@
-package camp.model.score.service;
+package camp.service;
 
-import camp.StudentManagement;
+import camp.repository.StudentManagement;
+import camp.repository.SubjectManagement;
 import camp.model.Student;
 import camp.model.Subject;
-import camp.model.score.Score;
-import camp.model.score.controller.ScoreController;
-import camp.model.score.gradeconvertor.Grade;
-import camp.model.score.gradeconvertor.GradeConvertor;
-import camp.model.score.gradeconvertor.RequiredSubConvertor;
+import camp.model.Score;
+import camp.repository.ScoreManagement;
+import camp.enums.Grade;
+import camp.interfaces.GradeConvertor;
+import camp.function.RequiredSubConvertor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +20,9 @@ import static camp.enums.SubjectType.*;
 
 public class ScoreService {
 
-    private final ScoreController scoreController = new ScoreController();
+    private final ScoreManagement scoreManagement = new ScoreManagement();
     private final StudentManagement studentManagement = new StudentManagement();
+    private final SubjectManagement subjectManagement = new SubjectManagement();
     private final Scanner scanner;
 
     public ScoreService(Scanner scanner) {
@@ -39,7 +41,7 @@ public class ScoreService {
         if (score == null) {
             System.out.print("***해당 과목에 등록된 점수가 없습니다.***\n해당 과목의 점수를 등록합니다.\n");
             Subject subject = subjectStore.get(subjectId.toString());
-            score = scoreController.createScore(studentId, subject); // new Score(); //subject는 ID와 Type이 필요.
+            score = scoreManagement.createScore(studentId, subject); // new Score(); //subject는 ID와 Type이 필요.
         }
 
 
@@ -72,7 +74,7 @@ public class ScoreService {
         System.out.print("등록할 점수를 입력해주세요: ");
         int subjectScore = inputScore();
 
-        scoreController.register(subjectScore, score);
+        scoreManagement.register(subjectScore, score);
 
         // 결과 출력
         System.out.println("*****등록 결과 확인 시작*****");
@@ -109,7 +111,7 @@ public class ScoreService {
 
 
         // 업데이트 컨트롤러 호출 -> 수정할 score 객체, 회차, 변경할 점수 넘겨줘야함.
-        scoreController.update(score, times, scoreToChange);
+        scoreManagement.update(score, times, scoreToChange);
 
         // 결과 출력
         System.out.println("*****수정 결과 확인 시작*****");
@@ -182,7 +184,7 @@ public class ScoreService {
 
             case 3 -> {
                 // 학생의 등록된 점수 다 가져오기
-                List<Score> scores = scoreController.findAllScoreByStudentId(studentId);
+                List<Score> scores = scoreManagement.findAllScoreByStudentId(studentId);
 
                 // 필수확인 && 필수과목 회차별 점수 합 담기
                 ArrayList<Integer> mandatoryScoreNum = new ArrayList<>();
@@ -205,13 +207,17 @@ public class ScoreService {
                 int averageMandatory = sumScored / mandatoryScoreNum.size();
                 System.out.println(
                         "학생 ID: " + studentId+
-                                "\n필수 과목 평균 점수: " + sumScored +
+                                "\n필수 과목 평균 점수: " + averageMandatory +
                                 "\n필수 과목 평균 등급: " + requiredGradeConvertor.ScoreToGrade(averageMandatory)
                 );
             }
 
             default -> throw new IllegalStateException("잘못된 옵션을 선택했습니다.");
         }
+    }
+
+    public void delete(String studentId) {
+        scoreManagement.delete(studentId);
     }
 
     // PRIVATE ZONE=====================================================================================================
@@ -238,8 +244,9 @@ public class ScoreService {
     private Score getSpecificScore(String studentId) {
 
         Map<String, Subject> subjectMap = studentManagement.getData(studentId).getSubjectList();// 학생의 수강과목들
+        System.out.println("==================================");
         for (String key : subjectMap.keySet()) { // 수강 과목 정보 출력
-            System.out.println(subjectMap.get(key).toString());
+            subjectManagement.select(subjectMap.get(key));
         }
 
         System.out.print("과목 번호를 입력하세요: ");
@@ -251,7 +258,7 @@ public class ScoreService {
         }
 
         // 저장소에 있으면 등록되어있는 Score반환 아닐 시, null 반환
-        return scoreController.findScoreById(studentId, subjectId);
+        return scoreManagement.findScoreById(studentId, subjectId);
     }
 
     /**
@@ -266,8 +273,9 @@ public class ScoreService {
         }
 
         Map<String, Subject> subjectMap = student.getSubjectList();// 학생의 수강과목들
+        System.out.println("==================================");
         for (String key : subjectMap.keySet()) { // 수강 과목 정보 출력
-            System.out.println(subjectMap.get(key).toString());
+            subjectManagement.select(subjectMap.get(key));
         }
 
         System.out.print("과목 번호를 입력하세요: ");
@@ -282,7 +290,7 @@ public class ScoreService {
         String subjectId = sbSubjectId.toString();
 
         // 저장소에 있으면 등록되어있는 Score반환 아닐 시, null 반환
-        return scoreController.findScoreById(studentId, subjectId);
+        return scoreManagement.findScoreById(studentId, subjectId);
     }
 
     /**

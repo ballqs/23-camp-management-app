@@ -1,4 +1,6 @@
-package camp.model.score.gradeconvertor;
+package camp.interfaces;
+
+import camp.enums.Grade;
 
 public interface GradeConvertor {
 

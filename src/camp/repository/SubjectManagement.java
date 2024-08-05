@@ -12,7 +12,10 @@ public class SubjectManagement implements ManagementInterface<Subject> {
 
     @Override
     public void select(Subject info) {
-
+        System.out.println("과목 고유번호 : " + info.getSubjectId());
+        System.out.println("과목 이름 : " + info.getSubjectName());
+        System.out.println("과목 타입 : " + info.getSubjectType());
+        System.out.println("==================================");
     }
 
     @Override

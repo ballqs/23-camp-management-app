@@ -1,10 +1,11 @@
-package camp.model.score.gradeconvertor;
+package camp.function;
 
-import java.util.Map;
+import camp.enums.Grade;
+import camp.interfaces.GradeConvertor;
 
-import static camp.model.score.gradeconvertor.Grade.*;
+import static camp.enums.Grade.*;
 
-public class OptionalSubConvertor implements GradeConvertor{
+public class OptionalSubConvertor implements GradeConvertor {
 
     @Override
     public Grade ScoreToGrade(int score) {

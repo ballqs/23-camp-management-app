@@ -3,9 +3,11 @@ package camp;
 import camp.enums.IndexType;
 import camp.enums.StudentStatusType;
 import camp.enums.SubjectType;
+import camp.function.Init;
+import camp.function.Sequence;
 import camp.model.Student;
 import camp.model.Subject;
-import camp.model.score.service.ScoreService;
+import camp.service.ScoreService;
 import camp.repository.StudentManagement;
 import camp.repository.SubjectManagement;
 
@@ -271,15 +273,19 @@ public class CampManagementApplication {
         inquireStudent();
         String studentId = getStudentId("\n삭제할 수강생의 번호를 입력하시오..."); //수강생 고유번호
         if (!Objects.isNull(studentManagement.getData(studentId))) {
+            // 수강생 정보 삭제
             studentManagement.delete(studentId);
+            // 점수 정보 삭제
+            ScoreService scoreService = new ScoreService(sc);
+            scoreService.delete(studentId);
             System.out.println("\n수강생 정보 삭제 완료!");
         } else {
             System.out.println("\n잘못된 수강생 번호입니다. 이전화면으로 이동...");
         }
     }
 
-    public String getStudentId() {
-        System.out.print("\n관리할 수강생의 번호를 입력하시오...");
+    public String getStudentId(String msg) {
+        System.out.print(msg);
         return sc.next();
     }
 

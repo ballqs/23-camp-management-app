@@ -1,7 +1,7 @@
-package camp.model.score;
+package camp.model;
 
-import camp.model.score.gradeconvertor.Grade;
-import camp.model.score.gradeconvertor.GradeConvertor;
+import camp.enums.Grade;
+import camp.interfaces.GradeConvertor;
 
 import java.util.Map;
 

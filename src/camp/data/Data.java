@@ -2,7 +2,7 @@ package camp.data;
 
 import camp.model.Student;
 import camp.model.Subject;
-import camp.model.score.Score;
+import camp.model.Score;
 
 import java.util.Map;
 

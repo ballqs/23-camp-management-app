@@ -1,4 +1,4 @@
-package camp;
+package camp.function;
 
 import camp.data.Data;
 import camp.enums.IndexType;

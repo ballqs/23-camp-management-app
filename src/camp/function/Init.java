@@ -1,4 +1,4 @@
-package camp;
+package camp.function;
 
 import camp.data.Data;
 import camp.enums.IndexType;
@@ -6,7 +6,6 @@ import camp.enums.SubjectList;
 import camp.model.Subject;
 import camp.repository.SubjectManagement;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Init {
