@@ -5,8 +5,11 @@ import camp.model.Subject;
 import camp.model.Score;
 
 import java.util.Map;
+import java.util.Scanner;
 
 public class Data {    // index 관리 필드
+
+    public static Scanner mysc;
     public static int studentIndex;     // 학생 고유번호 INDEX
     public static int subjectIndex;     // 과목 고유번호 INDEX
 
