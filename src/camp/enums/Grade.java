@@ -1,6 +1,10 @@
 package camp.enums;
 
 public enum Grade {
-
-    A, B, C, D, F, N
+    A,
+    B,
+    C,
+    D,
+    F,
+    N
 }

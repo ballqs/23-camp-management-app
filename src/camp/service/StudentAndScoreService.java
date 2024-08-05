@@ -16,9 +16,9 @@ public class StudentAndScoreService {
     // 수강생 삭제
     public void deleteStudent() {
         StudentService studentService = new StudentService(sc);
-        studentService.inquireStudent();
+        studentService.printAllStudent();
         String studentId = studentService.getStudentId("\n삭제할 수강생의 번호를 입력하시오..."); //수강생 고유번호
-        if (!Objects.isNull(studentManagement.getData(studentId))) {
+        if (Objects.nonNull(studentManagement.getData(studentId))) {
             // 수강생 정보 삭제
             studentManagement.delete(studentId);
             // 점수 정보 삭제

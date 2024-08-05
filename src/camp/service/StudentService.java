@@ -9,7 +9,6 @@ import java.util.Scanner;
 
 public class StudentService {
 
-
     public Scanner sc;
     public StudentManagement studentManagement = new StudentManagement();
 
@@ -22,23 +21,23 @@ public class StudentService {
         return sc.next();
     }
 
-    public void inquireStudent() {
+    public void printAllStudent() {
         System.out.println("\n수강생 목록을 조회합니다...");
-        // 1.전체 조회 기반(studentStore 에서 가져오기) Student에서 조회해서 뿌리는 것 구현해서 이용해도 댐
-        studentManagement.selectAll();
+        // 1.전체 조회 기반(STUDENTSTORE 에서 가져오기) Student에서 조회해서 뿌리는 것 구현해서 이용해도 댐
+        studentManagement.printAll();
         System.out.println("\n수강생 목록 조회 성공!");
     }
 
     // 수강생 정보 수정
     public void updateStudent() {
         if (studentManagement.lenCheck()) {
-            inquireStudent();
+            printAllStudent();
             String studentId = getStudentId("\n수정할 수강생의 번호를 입력하시오..."); //수강생 고유번호
 
             Student student = studentManagement.getData(studentId);
-            if (!Objects.isNull(student)) {
+            if (Objects.nonNull(student)) {
                 System.out.println("수정하려는 수강생 정보는 아래와 같습니다.");
-                studentManagement.select(student);
+                studentManagement.print(student);
 
                 System.out.println("==================================");
                 System.out.println("1.이름");

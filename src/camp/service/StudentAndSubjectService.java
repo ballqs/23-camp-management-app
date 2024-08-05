@@ -34,7 +34,7 @@ public class StudentAndSubjectService {
         String studentName = sc.next(); // 수강생 이름
 
         // 2.과목리스트 조회(Subject 에서 가져와서 뿌리기) 필수:3 , 선택:2 검증 필요!!
-        subjectManagement.selectAll();
+        subjectManagement.printAll();
 
         // 3.과목 담기
         int required = 0;   // 필수
@@ -67,11 +67,10 @@ public class StudentAndSubjectService {
                 choice++;       // 선택 증가
             }
 
+            System.out.println("등록된 과목은 현재 필수 : " + required + " , 선택 : " + choice);
             if (required < 3 || choice < 2) {
-                System.out.println("등록된 과목은 현재 필수 : " + required + " , 선택 : " + choice);
                 System.out.println("과목을 더 등록해주세요.");
             } else {
-                System.out.println("등록된 과목은 현재 필수 : " + required + " , 선택 : " + choice);
                 System.out.println("과목을 더 등록하시겠습니까?");
                 String result = sc.next(); // 과목 고유번호
                 if (!result.equals("예")) {
@@ -81,8 +80,8 @@ public class StudentAndSubjectService {
             }
         }
 
-        String id = sequence.sequence(IndexType.ST.name());
-        // 4.studentStore 에 저장
+        String id = sequence.create(IndexType.ST.name());
+        // 4.STUDENTSTORE 에 저장
         Student student = new Student(id, studentName , subjectList , StudentStatusType.Green.name()); // 수강생 인스턴스 생성 예시 코드
         studentManagement.insert(id , student);
         // 기능 구현

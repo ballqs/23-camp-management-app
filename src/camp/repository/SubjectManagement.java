@@ -7,11 +7,11 @@ import camp.model.Subject;
 public class SubjectManagement implements ManagementInterface<Subject> {
     @Override
     public Subject getData(String value) {
-        return Data.subjectStore.get(value);
+        return Data.SUBJECTSTORE.get(value);
     }
 
     @Override
-    public void select(Subject info) {
+    public void print(Subject info) {
         System.out.println("과목 고유번호 : " + info.getSubjectId());
         System.out.println("과목 이름 : " + info.getSubjectName());
         System.out.println("과목 타입 : " + info.getSubjectType());
@@ -19,28 +19,18 @@ public class SubjectManagement implements ManagementInterface<Subject> {
     }
 
     @Override
-    public void selectAll() {
+    public void printAll() {
         System.out.println("==================================");
-        for (String str : Data.subjectStore.keySet()) {
-            System.out.println("과목 고유번호 : " + Data.subjectStore.get(str).getSubjectId());
-            System.out.println("과목 이름 : " + Data.subjectStore.get(str).getSubjectName());
-            System.out.println("과목 타입 : " + Data.subjectStore.get(str).getSubjectType());
+        for (String str : Data.SUBJECTSTORE.keySet()) {
+            System.out.println("과목 고유번호 : " + Data.SUBJECTSTORE.get(str).getSubjectId());
+            System.out.println("과목 이름 : " + Data.SUBJECTSTORE.get(str).getSubjectName());
+            System.out.println("과목 타입 : " + Data.SUBJECTSTORE.get(str).getSubjectType());
             System.out.println("==================================");
         }
     }
 
     @Override
-    public void update(String id , String fleid , String value) {
-
-    }
-
-    @Override
-    public void delete(String id) {
-
-    }
-
-    @Override
     public void insert(String key , Subject subject) {
-        Data.subjectStore.put(key , subject);
+        Data.SUBJECTSTORE.put(key , subject);
     }
 }
