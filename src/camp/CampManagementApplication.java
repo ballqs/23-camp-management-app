@@ -33,8 +33,8 @@ public class CampManagementApplication {
     }
 
     public void displayMainView() throws InterruptedException {
-
         boolean flag = true;
+
         while (flag) {
             System.out.println("\n==================================");
             System.out.println("내일배움캠프 수강생 관리 프로그램 실행 중...");
@@ -77,7 +77,7 @@ public class CampManagementApplication {
 
             switch (input) {
                 case 1 -> studentAndSubjectService.createStudent(); // 수강생 등록
-                case 2 -> studentService.inquireStudent(); // 수강생 목록 조회
+                case 2 -> studentService.printAllStudent(); // 수강생 목록 조회
                 case 3 -> studentService.updateStudent(); // 수강생 정보 수정
                 case 4 -> studentService.selectStatus(); // 상태별 수강생 목록 조회
                 case 5 -> studentAndScoreService.deleteStudent(); // 수강생 삭제
@@ -93,6 +93,7 @@ public class CampManagementApplication {
     public void displayScoreView() {
         ScoreService scoreService = new ScoreService(sc);
         boolean flag = true;
+
         while (flag) {
             System.out.println("==================================");
             System.out.println("점수 관리 실행 중...");

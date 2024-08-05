@@ -1,10 +1,12 @@
 package camp.enums;
 
-// 수강생 상태값
 public enum StudentStatusType {
-    Green(1) , Red(2) , Yellow(3);
+    Green(1),
+    Red(2),
+    Yellow(3);
 
     int index = 0;
+
     StudentStatusType(int n) {
         this.index = n;
     }

@@ -9,7 +9,7 @@ import camp.model.Score;
 
 import java.util.*;
 
-import static camp.data.Data.scoreStore;
+import static camp.data.Data.SCORESTORE;
 
 public class ScoreManagement {
 
@@ -19,7 +19,7 @@ public class ScoreManagement {
      * 저장소에 있는 특정 Score를 찾음 -> 없으면 null 반환
      */
     public Score findScoreById(String studentId, String subjectId) {
-        return scoreStore.getOrDefault(makeKey(studentId, subjectId), null);
+        return SCORESTORE.getOrDefault(makeKey(studentId, subjectId), null);
     }
 
     /**
@@ -27,7 +27,7 @@ public class ScoreManagement {
      */
     public List<Score> findAllScoreByStudentId(String studentId) {
         List<Score> scores = new ArrayList<>();
-        for (Score score : scoreStore.values()) {
+        for (Score score : SCORESTORE.values()) {
             if (score.getStudentId().equals(studentId)) {
                 scores.add(score);
             }
@@ -58,7 +58,7 @@ public class ScoreManagement {
 
         //최초 등록되는 Score는 저장소에 등록
         if (scoreMap.size() == 1) {
-            scoreStore.put(storeKey, score);
+            SCORESTORE.put(storeKey, score);
         }
     }
 
@@ -72,7 +72,7 @@ public class ScoreManagement {
     }
 
     public void delete(String studentId) {
-        Map<String , Score> map = Data.scoreStore;
+        Map<String , Score> map = Data.SCORESTORE;
         for (String str : Set.copyOf(map.keySet())) {
             Score score = map.get(str);
             if (score.getStudentId().equals(studentId)) {

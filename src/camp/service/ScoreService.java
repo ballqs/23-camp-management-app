@@ -40,7 +40,7 @@ public class ScoreService {
 
         if (score == null) {
             System.out.print("***해당 과목에 등록된 점수가 없습니다.***\n해당 과목의 점수를 등록합니다.\n");
-            Subject subject = subjectStore.get(subjectId.toString());
+            Subject subject = SUBJECTSTORE.get(subjectId.toString());
             score = scoreManagement.createScore(studentId, subject); // new Score(); //subject는 ID와 Type이 필요.
         }
 
@@ -53,7 +53,7 @@ public class ScoreService {
         int option;
         do {
             int times = score.getScoreMap().size();
-            String subjectName = subjectStore.get(score.getSubjectId()).getSubjectName();
+            String subjectName = SUBJECTSTORE.get(score.getSubjectId()).getSubjectName();
 
             System.out.print(subjectName + "과목의 " + (times + 1) + "회차에 점수를 등록하시겠습니까? ");
             System.out.print("(1. 예 | 2. 아니오)\n입력한 옵션: ");
@@ -97,7 +97,7 @@ public class ScoreService {
         }
 
         // 수정할 과목의 각 회차별 점수를 출력
-        System.out.println(subjectStore.get(score.getSubjectId()).getSubjectName() + "과목의 회차별 점수 출력");
+        System.out.println(SUBJECTSTORE.get(score.getSubjectId()).getSubjectName() + "과목의 회차별 점수 출력");
         for (int i = 0; i < score.getScoreMap().size(); i++) {
             System.out.println("-" + (i + 1) + "회차 " + score.getScoreMap().get(i + 1) + "점");
         }
@@ -149,7 +149,7 @@ public class ScoreService {
 
                 /* 특정 과목, 특정 회차 조회 로직
                 System.out.println(
-                        subjectStore.get("===" + score.getSubjectId()).getSubjectName() + "과목의 회차별 등급 조회==="
+                        SUBJECTSTORE.get("===" + score.getSubjectId()).getSubjectName() + "과목의 회차별 등급 조회==="
                 );
                 for (int i = 0; i < score.getScoreMap().size(); i++) {
                     System.out.println(
@@ -175,7 +175,7 @@ public class ScoreService {
                 System.out.println("=====평균등급 조회 결과 확인 시작=====");
                 System.out.println(
                         "학생 ID: " + score.getSubjectId() +
-                                "\n과목명: " + subjectStore.get(score.getSubjectId()).getSubjectName() +
+                                "\n과목명: " + SUBJECTSTORE.get(score.getSubjectId()).getSubjectName() +
                                 "\n평균 점수: " + averageScore +
                                 "\n평균 등급: " + grade
                 );
@@ -190,7 +190,7 @@ public class ScoreService {
                 ArrayList<Integer> mandatoryScoreNum = new ArrayList<>();
                 scores.stream()
                         .filter(scored ->
-                            subjectStore.get(scored.getSubjectId()).getSubjectType().equals(MANDATORY.name()))
+                            SUBJECTSTORE.get(scored.getSubjectId()).getSubjectType().equals(MANDATORY.name()))
                         .forEach(scored -> {
                             Map<Integer, Integer> scoreMap = scored.getScoreMap();
                             for (Integer key : scoreMap.keySet()) {
@@ -226,7 +226,7 @@ public class ScoreService {
      * target 학생 id 입력받는 메서드
      */
     private String designateStudentId() {
-        studentManagement.selectAll(); // 학생 목록 조회
+        studentManagement.printAll(); // 학생 목록 조회
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
         String studentId = scanner.nextLine();
 
@@ -246,7 +246,7 @@ public class ScoreService {
         Map<String, Subject> subjectMap = studentManagement.getData(studentId).getSubjectList();// 학생의 수강과목들
         System.out.println("==================================");
         for (String key : subjectMap.keySet()) { // 수강 과목 정보 출력
-            subjectManagement.select(subjectMap.get(key));
+            subjectManagement.print(subjectMap.get(key));
         }
 
         System.out.print("과목 번호를 입력하세요: ");
@@ -275,7 +275,7 @@ public class ScoreService {
         Map<String, Subject> subjectMap = student.getSubjectList();// 학생의 수강과목들
         System.out.println("==================================");
         for (String key : subjectMap.keySet()) { // 수강 과목 정보 출력
-            subjectManagement.select(subjectMap.get(key));
+            subjectManagement.print(subjectMap.get(key));
         }
 
         System.out.print("과목 번호를 입력하세요: ");
@@ -314,7 +314,7 @@ public class ScoreService {
     private void completePrinter(Score score, int times) {
         System.out.println("전체 회차: " + score.getScoreMap().size());
         System.out.println("학생명: " + studentManagement.getData(score.getStudentId()).getStudentName());
-        System.out.println("과목명: " + subjectStore.get(score.getSubjectId()).getSubjectName());
+        System.out.println("과목명: " + SUBJECTSTORE.get(score.getSubjectId()).getSubjectName());
         System.out.println("회차: " + times);
         System.out.println("점수: " + score.getScoreMap().get(times));
         System.out.println("등급: " + score.getGradeMap().get(times));
