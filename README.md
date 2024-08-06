@@ -105,8 +105,6 @@
 ```java
 src/
 └── camp/
-    ├── data/
-    │   └── Data.java                 # Static 변수 모아둔 파일
     ├── enums/
     │   ├── Grade.java                # 학점 등급을 정의하는 열거형
     │   ├── IndexType.java            # 인덱스 타입을 정의하는 열거형
