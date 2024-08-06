@@ -1,6 +1,7 @@
 package camp.repository;
 
 import camp.data.Data;
+import camp.function.OptionalSubConvertor;
 import camp.model.Subject;
 import camp.enums.Grade;
 import camp.interfaces.GradeConvertor;
@@ -101,7 +102,7 @@ public class ScoreManagement {
             return new RequiredSubConvertor();
 
         } else if (subject.getSubjectType().equals("CHOICE")) {
-            return new RequiredSubConvertor();
+            return new OptionalSubConvertor();
 
         } else {
             throw new IllegalStateException("과목의 타입이 분류 제대로 되어있지 않습니다. 과목 타입: " + subject.getSubjectType());
