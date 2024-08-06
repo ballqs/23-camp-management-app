@@ -1,24 +1,18 @@
 package camp.service;
 
+import camp.CampManagementApplication;
 import camp.enums.StudentStatusType;
 import camp.model.Student;
 import camp.repository.StudentManagement;
 
 import java.util.Objects;
-import java.util.Scanner;
 
 public class StudentService {
-
-    public Scanner sc;
     public StudentManagement studentManagement = new StudentManagement();
-
-    public StudentService(Scanner sc) {
-        this.sc = sc;
-    }
 
     public String getStudentId(String msg) {
         System.out.print(msg);
-        return sc.next();
+        return CampManagementApplication.SC.next();
     }
 
     public void printAllStudent() {
@@ -43,7 +37,7 @@ public class StudentService {
                 System.out.println("1.이름");
                 System.out.println("2.상태");
                 System.out.print("변경할 항목을 선택하세요...");
-                int input = sc.nextInt(); // 상태 번호
+                int input = CampManagementApplication.SC.nextInt(); // 상태 번호
 
                 switch (input) {
                     case 1 -> changeStudentName(student.getStudentId());
@@ -66,7 +60,7 @@ public class StudentService {
     public void changeStudentName(String studentId) {
         System.out.println("==================================");
         System.out.print("변경하실 수강생 이름을 입력해주세요...");
-        String studentName = sc.next(); // 수강생 이름
+        String studentName = CampManagementApplication.SC.next(); // 수강생 이름
 
         StudentManagement studentManagement = new StudentManagement();
         studentManagement.update(studentId , "studentName" , studentName);
@@ -81,7 +75,7 @@ public class StudentService {
             System.out.println("수강생 상태 종류");
             studentManagement.statusList();
             System.out.print("변경할 항목을 선택하세요...");
-            int input = sc.nextInt(); // 상태 번호
+            int input = CampManagementApplication.SC.nextInt(); // 상태 번호
 
             if (input < 1 || input > StudentStatusType.values().length) {
                 System.out.println("잘못된 입력입니다.");
@@ -103,7 +97,7 @@ public class StudentService {
             System.out.println("수강생 상태 종류");
             studentManagement.statusList();
             System.out.print("조회할 항목을 선택하세요...");
-            int input = sc.nextInt();
+            int input = CampManagementApplication.SC.nextInt();
 
             if (input < 1 || input > StudentStatusType.values().length) {
                 System.out.println("잘못된 입력입니다.");

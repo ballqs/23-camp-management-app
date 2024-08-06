@@ -2,6 +2,8 @@ package camp;
 
 import camp.function.Init;
 import camp.service.*;
+
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -19,7 +21,12 @@ public class CampManagementApplication {
 //    private static final String INDEX_TYPE_SCORE = "SC";          // 사용안함
 
     // 스캐너
-    public Scanner sc = new Scanner(System.in);
+    public final static Scanner SC = new Scanner(System.in);
+
+    private StudentAndSubjectService studentAndSubjectService = new StudentAndSubjectService();
+    private StudentService studentService = new StudentService();
+    private StudentAndScoreService studentAndScoreService = new StudentAndScoreService();
+    private ScoreService scoreService = new ScoreService();
 
     public static void main(String[] args) {
         Init.setInitData(); // 초기 설정
@@ -42,12 +49,12 @@ public class CampManagementApplication {
             System.out.println("2. 점수 관리");
             System.out.println("3. 프로그램 종료");
             System.out.print("관리 항목을 선택하세요...");
-            int input = sc.nextInt();
+            String input = SC.next();
 
             switch (input) {
-                case 1 -> displayStudentView(); // 수강생 관리
-                case 2 -> displayScoreView(); // 점수 관리
-                case 3 -> flag = false; // 프로그램 종료
+                case "1" -> displayStudentView(); // 수강생 관리
+                case "2" -> displayScoreView(); // 점수 관리
+                case "3" -> flag = false; // 프로그램 종료
                 default -> {
                     System.out.println("잘못된 입력입니다.\n되돌아갑니다!");
                     Thread.sleep(2000);
@@ -58,11 +65,8 @@ public class CampManagementApplication {
     }
 
     public void displayStudentView() {
-        StudentAndSubjectService studentAndSubjectService = new StudentAndSubjectService(sc);
-        StudentService studentService = new StudentService(sc);
-        StudentAndScoreService studentAndScoreService = new StudentAndScoreService(sc);
-
         boolean flag = true;
+
         while (flag) {
             System.out.println("==================================");
             System.out.println("수강생 관리 실행 중...");
@@ -73,15 +77,15 @@ public class CampManagementApplication {
             System.out.println("5. 수강생 삭제");
             System.out.println("6. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
-            int input = sc.nextInt();
+            String input = SC.next();
 
             switch (input) {
-                case 1 -> studentAndSubjectService.createStudent(); // 수강생 등록
-                case 2 -> studentService.printAllStudent(); // 수강생 목록 조회
-                case 3 -> studentService.updateStudent(); // 수강생 정보 수정
-                case 4 -> studentService.selectStatus(); // 상태별 수강생 목록 조회
-                case 5 -> studentAndScoreService.deleteStudent(); // 수강생 삭제
-                case 6 -> flag = false; // 메인 화면 이동
+                case "1" -> studentAndSubjectService.createStudent(); // 수강생 등록
+                case "2" -> studentService.printAllStudent(); // 수강생 목록 조회
+                case "3" -> studentService.updateStudent(); // 수강생 정보 수정
+                case "4" -> studentService.selectStatus(); // 상태별 수강생 목록 조회
+                case "5" -> studentAndScoreService.deleteStudent(); // 수강생 삭제
+                case "6" -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
@@ -91,7 +95,6 @@ public class CampManagementApplication {
     }
 
     public void displayScoreView() {
-        ScoreService scoreService = new ScoreService(sc);
         boolean flag = true;
 
         while (flag) {
@@ -102,15 +105,15 @@ public class CampManagementApplication {
             System.out.println("3. 수강생의 특정 과목 회차별 등급 조회");
             System.out.println("4. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
-            int input = sc.nextInt();
-            sc.nextLine();
+            String input = SC.next();
+            SC.nextLine();
 
             try {
                 switch (input) {
-                    case 1 -> scoreService.createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
-                    case 2 -> scoreService.updateRoundScoreBySubject();// 수강생의 과목별 회차 점수 수정
-                    case 3 -> scoreService.inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
-                    case 4 -> flag = false; // 메인 화면 이동
+                    case "1" -> scoreService.createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
+                    case "2" -> scoreService.updateRoundScoreBySubject();// 수강생의 과목별 회차 점수 수정
+                    case "3" -> scoreService.inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
+                    case "4" -> flag = false; // 메인 화면 이동
                     default -> {
                         System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                         flag = false;

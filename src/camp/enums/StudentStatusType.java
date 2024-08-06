@@ -1,9 +1,9 @@
 package camp.enums;
 
 public enum StudentStatusType {
-    Green(1),
-    Red(2),
-    Yellow(3);
+    GREEN(1),
+    RED(2),
+    YELLOW(3);
 
     int index = 0;
 

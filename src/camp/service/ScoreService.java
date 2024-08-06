@@ -1,5 +1,6 @@
 package camp.service;
 
+import camp.CampManagementApplication;
 import camp.repository.StudentManagement;
 import camp.repository.SubjectManagement;
 import camp.model.Student;
@@ -13,21 +14,15 @@ import camp.function.RequiredSubConvertor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
-import static camp.data.Data.*;
 import static camp.enums.SubjectType.*;
+import static camp.repository.SubjectManagement.SUBJECTSTORE;
 
 public class ScoreService {
 
     private final ScoreManagement scoreManagement = new ScoreManagement();
     private final StudentManagement studentManagement = new StudentManagement();
     private final SubjectManagement subjectManagement = new SubjectManagement();
-    private final Scanner scanner;
-
-    public ScoreService(Scanner scanner) {
-        this.scanner = scanner;
-    }
 
     /**
      * 점수 등록 서비스
@@ -57,7 +52,7 @@ public class ScoreService {
 
             System.out.print(subjectName + "과목의 " + (times + 1) + "회차에 점수를 등록하시겠습니까? ");
             System.out.print("(1. 예 | 2. 아니오)\n입력한 옵션: ");
-            option = scanner.nextInt();
+            option = CampManagementApplication.SC.nextInt();
 
             switch (option) {
                 case 1:
@@ -120,10 +115,10 @@ public class ScoreService {
     }
 
     private int inputScore() {
-        int inputScore = scanner.nextInt();
+        int inputScore = CampManagementApplication.SC.nextInt();
         while (0 > inputScore || inputScore > 100) {
             System.out.print("잘못된 점수를 입력하였습니다.\n0~100 사이의 점수를 다시 입력해주세요: ");
-            inputScore = scanner.nextInt();
+            inputScore = CampManagementApplication.SC.nextInt();
         }
         return inputScore;
     }
@@ -136,7 +131,7 @@ public class ScoreService {
         Score score = getSpecificScore(studentId); // 학생 ID에 일치하는 등록된 Score -> scoreController.findScoreInStore()
 
         System.out.print("1. 회차별 등급 조회 | 2. 특정 과목 평균등급 조회 | 3. 필수과목 평균등급 조회\n선택한 옵션: ");
-        int option = scanner.nextInt();
+        int option = CampManagementApplication.SC.nextInt();
 
         switch (option) {
             case 1 -> {
@@ -228,7 +223,7 @@ public class ScoreService {
     private String designateStudentId() {
         studentManagement.printAll(); // 학생 목록 조회
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
-        String studentId = scanner.nextLine();
+        String studentId = CampManagementApplication.SC.nextLine();
 
         if (studentManagement.getData(studentId) == null) {
             throw new IllegalStateException("등록되지 않은 학생 정보입니다.");
@@ -250,11 +245,11 @@ public class ScoreService {
         }
 
         System.out.print("과목 번호를 입력하세요: ");
-        String subjectId = scanner.nextLine(); // 작업할 과목 번호 받기
+        String subjectId = CampManagementApplication.SC.nextLine(); // 작업할 과목 번호 받기
 
         while (!subjectMap.containsKey(subjectId)) {
             System.out.print("학생이 수강하지 않는 과목입니다.\n다시 입력해주세요: ");
-            subjectId = scanner.nextLine(); // 작업할 과목 번호 받기
+            subjectId = CampManagementApplication.SC.nextLine(); // 작업할 과목 번호 받기
         }
 
         // 저장소에 있으면 등록되어있는 Score반환 아닐 시, null 반환
@@ -279,12 +274,12 @@ public class ScoreService {
         }
 
         System.out.print("과목 번호를 입력하세요: ");
-        sbSubjectId.append(scanner.nextLine());// 작업할 과목 번호 받기
+        sbSubjectId.append(CampManagementApplication.SC.nextLine());// 작업할 과목 번호 받기
 
         while (!subjectMap.containsKey(sbSubjectId.toString())) {
             System.out.print("학생이 수강하지 않는 과목입니다.\n다시 입력해주세요: ");
             sbSubjectId.setLength(0);
-            sbSubjectId.append(scanner.nextLine());// 작업할 과목 번호 받기
+            sbSubjectId.append(CampManagementApplication.SC.nextLine());// 작업할 과목 번호 받기
         }
 
         String subjectId = sbSubjectId.toString();
@@ -298,12 +293,12 @@ public class ScoreService {
      */
     private int designateTimes(Score score) {
         System.out.print("회차를 입력해주세요: ");
-        int times = scanner.nextInt();
+        int times = CampManagementApplication.SC.nextInt();
 
         // 입력 받은 회차가 0이하 OR 회차보다 큰 수를 입력 받으면 다시.
         while (score.getScoreMap().size() < times || times <= 0) {
             System.out.print("존재하지 않는 회차입니다.\n다시 입력해주세요: ");
-            times = scanner.nextInt();
+            times = CampManagementApplication.SC.nextInt();
         }
         return times;
     }
