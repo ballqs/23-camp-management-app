@@ -14,7 +14,7 @@ public class Init {
 
         String id = "";
         for (int i = 0; i < SubjectList.values().length; i++) {
-            id = sequence.create(IndexType.SU.name());
+            id = sequence.create(IndexType.SU , subjectManagement.getSubjectIndex());
             subjectManagement.insert(id , new Subject(id , SubjectList.values()[i].getName() , SubjectList.values()[i].getType().name()));
         }
     }

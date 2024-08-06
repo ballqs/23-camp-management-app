@@ -1,17 +1,27 @@
 package camp.repository;
 
-import camp.data.Data;
 import camp.enums.StudentStatusType;
 import camp.interfaces.ManagementInterface;
 import camp.model.Student;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StudentManagement implements ManagementInterface<Student> {
+
+    public final static Map<String , Student> STUDENTSTORE = new HashMap<>(); // 학생 고유번호, 학생 객체
+    private int studentIndex = 0;     // 학생 고유번호 INDEX
+
+    public int getStudentIndex() {
+        studentIndex++;
+        return studentIndex;
+    }
+
     @Override
     public Student getData(String key) {
-        return Data.STUDENTSTORE.get(key);
+        return STUDENTSTORE.get(key);
     }
 
     @Override
@@ -22,22 +32,22 @@ public class StudentManagement implements ManagementInterface<Student> {
     @Override
     public void printAll() {
         System.out.println("==================================");
-        for (String key : Data.STUDENTSTORE.keySet()) {
+        for (String key : STUDENTSTORE.keySet()) {
             List<String> subjectList = new ArrayList<>();
-            for(String subject : Data.STUDENTSTORE.get(key).getSubjectList().keySet()) {
-                subjectList.add(Data.STUDENTSTORE.get(key).getSubjectList().get(subject).getSubjectName());
+            for(String subject : STUDENTSTORE.get(key).getSubjectList().keySet()) {
+                subjectList.add(STUDENTSTORE.get(key).getSubjectList().get(subject).getSubjectName());
             }
 
-            System.out.println("수강생 고유번호 : " + Data.STUDENTSTORE.get(key).getStudentId());
-            System.out.println("수강생 이름 : " + Data.STUDENTSTORE.get(key).getStudentName());
+            System.out.println("수강생 고유번호 : " + STUDENTSTORE.get(key).getStudentId());
+            System.out.println("수강생 이름 : " + STUDENTSTORE.get(key).getStudentName());
             System.out.println("수강생 과목 : " + String.join(",", subjectList));
-            System.out.println("수강생 상태 : " + Data.STUDENTSTORE.get(key).getStudentStatus());
+            System.out.println("수강생 상태 : " + STUDENTSTORE.get(key).getStudentStatus());
             System.out.println("==================================");
         }
     }
 
     public void update(String key , String fleid , String value) {
-        Student student = Data.STUDENTSTORE.get(key);
+        Student student = STUDENTSTORE.get(key);
         switch (fleid) {
             case "studentName" :
                 student.setStudentName(value);
@@ -46,20 +56,20 @@ public class StudentManagement implements ManagementInterface<Student> {
                 student.setStudentStatus(value);
                 break;
         }
-        Data.STUDENTSTORE.put(key , student);
+        STUDENTSTORE.put(key , student);
     }
 
     public void delete(String key) {
-        Data.STUDENTSTORE.remove(key);
+        STUDENTSTORE.remove(key);
     }
 
     @Override
     public void insert(String key , Student student) {
-        Data.STUDENTSTORE.put(key , student);
+        STUDENTSTORE.put(key , student);
     }
 
     public boolean lenCheck() {
-        return Data.STUDENTSTORE.size() > 0 ? true : false;
+        return STUDENTSTORE.size() > 0 ? true : false;
     }
 
     public void statusList() {
@@ -73,8 +83,8 @@ public class StudentManagement implements ManagementInterface<Student> {
     public void selectStatusStudent(String status) {
         List<Student> list = new ArrayList<>();
 
-        for (String key : Data.STUDENTSTORE.keySet()) {
-            Student student = Data.STUDENTSTORE.get(key);
+        for (String key : STUDENTSTORE.keySet()) {
+            Student student = STUDENTSTORE.get(key);
             if (student.getStudentStatus().equals(status)) {
                 list.add(student);
             }

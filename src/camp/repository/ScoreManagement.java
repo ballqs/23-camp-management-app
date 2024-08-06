@@ -1,6 +1,6 @@
 package camp.repository;
 
-import camp.data.Data;
+import camp.function.OptionalSubConvertor;
 import camp.model.Subject;
 import camp.enums.Grade;
 import camp.interfaces.GradeConvertor;
@@ -9,10 +9,8 @@ import camp.model.Score;
 
 import java.util.*;
 
-import static camp.data.Data.SCORESTORE;
-
 public class ScoreManagement {
-
+    public final static Map<String, Score> SCORESTORE = new HashMap<>(); // (학생 고유번호 + 과목 고유번호)
 
     /**
      * A학생의 B과목을 찾아야함 -> 학생 ID, 과목 ID 둘다 필요
@@ -72,7 +70,7 @@ public class ScoreManagement {
     }
 
     public void delete(String studentId) {
-        Map<String , Score> map = Data.SCORESTORE;
+        Map<String , Score> map = SCORESTORE;
         for (String str : Set.copyOf(map.keySet())) {
             Score score = map.get(str);
             if (score.getStudentId().equals(studentId)) {
@@ -101,7 +99,7 @@ public class ScoreManagement {
             return new RequiredSubConvertor();
 
         } else if (subject.getSubjectType().equals("CHOICE")) {
-            return new RequiredSubConvertor();
+            return new OptionalSubConvertor();
 
         } else {
             throw new IllegalStateException("과목의 타입이 분류 제대로 되어있지 않습니다. 과목 타입: " + subject.getSubjectType());
