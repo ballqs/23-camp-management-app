@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?text=23조%20수강생%20관리%20시스템&animation=fadeIn&type=cylinder&color=FF5A5A&fontColor=F6F6F6)
+![header](https://capsule-render.vercel.app/api?text=23조%20수강생%20관리%20시스템&animation=fadeIn&type=venom&color=FFA7A7&fontColor=F15F5F)
 
 ## 프로젝트 개요
 
