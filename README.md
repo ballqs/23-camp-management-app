@@ -63,6 +63,7 @@
 | 고유 번호 | String                |
 | 이름      | String                |
 | 과목 목록 | Map<String , Subject> |
+| 상태      | String                |
 
 > 점수
 
