@@ -135,12 +135,11 @@ public class ScoreService {
 
         switch (option) {
             case 1 -> {
+                System.out.println("*****회차별 조회 결과 확인 시작*****");
                 for (int i = 0; i < score.getScoreMap().size(); i++) {
-                    System.out.println("*****수정 결과 확인 시작*****");
                     completePrinter(score, (i + 1));
-                    System.out.println("*****수정 결과 확인 종료*****");
-
                 }
+                System.out.println("*****회차별 조회 결과 확인 종료*****");
 
                 /* 특정 과목, 특정 회차 조회 로직
                 System.out.println(
@@ -238,16 +237,16 @@ public class ScoreService {
      */
     private Score getSpecificScore(String studentId) {
 
-        Map<String, Subject> subjectMap = studentManagement.getData(studentId).getSubjectList();// 학생의 수강과목들
+        Map<String, Subject> studentSubjectMap = studentManagement.getData(studentId).getSubjectList();// 학생의 수강과목들
         System.out.println("==================================");
-        for (String key : subjectMap.keySet()) { // 수강 과목 정보 출력
-            subjectManagement.print(subjectMap.get(key));
+        for (String key : studentSubjectMap.keySet()) { // 수강 과목 정보 출력
+            subjectManagement.print(studentSubjectMap.get(key));
         }
 
         System.out.print("과목 번호를 입력하세요: ");
         String subjectId = CampManagementApplication.SC.nextLine(); // 작업할 과목 번호 받기
 
-        while (!subjectMap.containsKey(subjectId)) {
+        while (!studentSubjectMap.containsKey(subjectId)) {
             System.out.print("학생이 수강하지 않는 과목입니다.\n다시 입력해주세요: ");
             subjectId = CampManagementApplication.SC.nextLine(); // 작업할 과목 번호 받기
         }
