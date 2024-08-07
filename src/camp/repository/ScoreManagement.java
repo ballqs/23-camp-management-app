@@ -10,6 +10,8 @@ import camp.model.Score;
 import java.util.*;
 
 public class ScoreManagement {
+
+
     public final static Map<String, Score> SCORESTORE = new HashMap<>(); // (학생 고유번호 + 과목 고유번호)
 
     /**
