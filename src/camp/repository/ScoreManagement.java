@@ -54,10 +54,10 @@ public class ScoreManagement {
 
         Grade grade = score.calculateGrade(subjectScore);// 점수에 따른 등급 저장
         gradeMap.put(times + 1, grade);
-        String storeKey = makeKey(score.getStudentId(), score.getSubjectId()); // 점수 저장소의 key값 생성
 
         //최초 등록되는 Score는 저장소에 등록
         if (scoreMap.size() == 1) {
+            String storeKey = makeKey(score.getStudentId(), score.getSubjectId()); // 점수 저장소의 key값 생성
             SCORESTORE.put(storeKey, score);
         }
     }
