@@ -75,12 +75,18 @@ public class StudentService {
             System.out.println("수강생 상태 종류");
             studentManagement.statusList();
             System.out.print("변경할 항목을 선택하세요...");
-            int input = CampManagementApplication.SC.nextInt(); // 상태 번호
 
-            if (input < 1 || input > StudentStatusType.values().length) {
+            String input = CampManagementApplication.SC.next();
+
+            if(!input.matches("[+-]?\\d*(\\.\\d+)?")) {
+                System.out.println("잘못된 입력입니다.");
+                continue;
+            }
+
+            if (Integer.parseInt(input) < 1 || Integer.parseInt(input) > StudentStatusType.values().length) {
                 System.out.println("잘못된 입력입니다.");
             } else {
-                status = StudentStatusType.getStatus(input);
+                status = StudentStatusType.getStatus(Integer.parseInt(input));
                 break;
             }
         }
@@ -97,12 +103,18 @@ public class StudentService {
             System.out.println("수강생 상태 종류");
             studentManagement.statusList();
             System.out.print("조회할 항목을 선택하세요...");
-            int input = CampManagementApplication.SC.nextInt();
 
-            if (input < 1 || input > StudentStatusType.values().length) {
+            String input = CampManagementApplication.SC.next();
+
+            if(!input.matches("[+-]?\\d*(\\.\\d+)?")) {
+                System.out.println("잘못된 입력입니다.");
+                continue;
+            }
+
+            if (Integer.parseInt(input) < 1 || Integer.parseInt(input) > StudentStatusType.values().length) {
                 System.out.println("잘못된 입력입니다.");
             } else {
-                status = StudentStatusType.getStatus(input);
+                status = StudentStatusType.getStatus(Integer.parseInt(input));
                 break;
             }
         }
