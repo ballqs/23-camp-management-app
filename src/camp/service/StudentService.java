@@ -37,11 +37,11 @@ public class StudentService {
                 System.out.println("1.이름");
                 System.out.println("2.상태");
                 System.out.print("변경할 항목을 선택하세요...");
-                int input = CampManagementApplication.SC.nextInt(); // 상태 번호
+                String input = CampManagementApplication.SC.next(); // 상태 번호
 
                 switch (input) {
-                    case 1 -> changeStudentName(student.getStudentId());
-                    case 2 -> changeStudentStatus(student.getStudentId());
+                    case "1" -> changeStudentName(student.getStudentId());
+                    case "2" -> changeStudentStatus(student.getStudentId());
                     default -> {
                         System.out.println("잘못된 입력입니다.\n이전 화면 이동...");
                     }
