@@ -26,7 +26,15 @@ public class StudentManagement implements ManagementInterface<Student> {
 
     @Override
     public void print(Student info) {
-
+        List<String> subjectList = new ArrayList<>();
+        for(String subject : info.getSubjectList().keySet()) {
+            subjectList.add(info.getSubjectList().get(subject).getSubjectName());
+        }
+        System.out.println("수강생 고유번호 : " + info.getStudentId());
+        System.out.println("수강생 이름 : " + info.getStudentName());
+        System.out.println("수강생 과목 : " + String.join(",", subjectList));
+        System.out.println("수강생 상태 : " + info.getStudentStatus());
+        System.out.println("==================================");
     }
 
     @Override
